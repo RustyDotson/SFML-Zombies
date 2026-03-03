@@ -98,7 +98,7 @@ class Registry {
         }
 
         template<typename A, typename B>
-        void view(std::function<void(Entity, A&, B&)> func) {
+        void ForEach(std::function<void(Entity, A&, B&)> func) {
             auto& storageA = getStorage<A>();
             auto& storageB = getStorage<B>();
 
@@ -111,9 +111,9 @@ class Registry {
         }
 
         template<typename A>
-        void view(std::function<void(Entity, A&)> func) {
+        void ForEach(std::function<void(Entity, A&)> func) {
             auto& storageA = getStorage<A>();
-            
+
             // Loop through every entity that has A. If it also has B, call the func.
             for (auto& [entity, compA] : storageA.getEntities()) {
                     func(entity, compA, storageA.get(entity));
