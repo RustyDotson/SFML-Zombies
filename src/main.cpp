@@ -11,7 +11,7 @@
 
 int main(){
     unsigned int windowSize = 800;
-    sf::RenderWindow window(sf::VideoMode({windowSize, windowSize}), "Forest Fire Visual Model");
+    sf::RenderWindow window(sf::VideoMode({windowSize, windowSize}), "Asteroids!");
 
     Game game;
     game.createPlayer();
@@ -20,16 +20,19 @@ int main(){
 
     while (window.isOpen())
     {  
-        float dt = clock.restart().asSeconds();
-        game.updateDeltaTime(dt);
-        game.update();
-        game.render(window);
-
         while (const std::optional event = window.pollEvent())
         {
             if (event->is<sf::Event::Closed>())
                 window.close();
         }
+        
+        float dt = clock.restart().asSeconds();
+        game.updateDeltaTime(dt);
+
+        game.update();
+        game.render(window);
+
+        
     }
 
     

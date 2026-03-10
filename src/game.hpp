@@ -36,7 +36,7 @@ public:
     }
 
 private:
-    float dt;
+    float dt = 0.f;
     Registry registry;
 
     SpriteSystem spriteSystem;
