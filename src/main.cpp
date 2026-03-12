@@ -15,6 +15,7 @@ int main(){
 
     Game game;
     game.createPlayer();
+    game.createCursor();
 
     sf::Clock clock;
 

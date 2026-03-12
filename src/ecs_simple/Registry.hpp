@@ -40,6 +40,16 @@ class Registry {
             return inputs;
         }
 
+        template<>
+        std::unordered_map<Entity, PlayerTag>& getComponent<PlayerTag>() {
+            return players;
+        }
+
+        template<>
+        std::unordered_map<Entity, CursorTag>& getComponent<CursorTag>() {
+            return cursors;
+        }
+
     private:
         std::vector <uint32_t> recycled_ids;
         uint32_t max_entity = 0;
@@ -47,4 +57,5 @@ class Registry {
         std::unordered_map<Entity, Transform> transforms;
         std::unordered_map<Entity, Input> inputs;
         std::unordered_map<Entity, PlayerTag> players;
+        std::unordered_map<Entity, CursorTag> cursors;
 };

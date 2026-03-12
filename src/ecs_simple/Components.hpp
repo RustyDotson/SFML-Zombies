@@ -24,13 +24,20 @@ struct Collision {
 };
 
 struct Input {
-    bool up, down, left, right, shoot;
+    bool up, down, left, right, shoot, look_right, look_left;
 };
 
 struct Lifetime {
     float timeLeft;
 };
 
-struct PlayerTag {};
+struct PlayerTag {
+    uint32_t lives = 3;
+};
+
+struct CursorTag {
+    sf::Vector2i position;
+};
+
 struct BulletTag {};
 struct AsteroidTag {};
