@@ -9,6 +9,8 @@ struct Transform {
     float rotation; 
     float velocity_x, velocity_y;
     sf::Vector2f position;
+    float max_speed;
+    float max_rotation_speed;
 };
 
 struct Health {
@@ -25,6 +27,7 @@ struct Collision {
 
 struct Input {
     bool up, down, left, right, shoot, look_right, look_left;
+    sf::Vector2i mouse_position;
 };
 
 struct Lifetime {

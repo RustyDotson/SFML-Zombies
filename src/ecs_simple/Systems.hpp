@@ -5,14 +5,18 @@
 
 struct SpriteSystem{
 
-    void update(Registry& reg){
+    void update(Registry& reg, float dt){
         std::unordered_map<Entity, Sprite>& sprites = reg.getComponent<Sprite>();
         std::unordered_map<Entity, Transform>& transforms = reg.getComponent<Transform>();
 
         for (int e = 1; e <= reg.maxEntity(); e++){
             if (sprites.contains(e) && transforms.contains(e)){
                 sprites[e].shape.setPosition(transforms[e].position);
-                sprites[e].shape.rotate(sf::degrees(transforms[e].rotation));
+                sprites[e].shape.rotate(sf::degrees(transforms[e].rotation)*dt);
+
+                //sets the point of rotation in the center of the shape.
+                sf::Vector2f center = sprites[e].shape.getSize(); 
+                sprites[e].shape.setOrigin({center.x / 2.f, center.y / 2.f}); 
             }
         }
     }
@@ -50,6 +54,11 @@ struct MovementSystem {
 
         for (int e = 1; e <= reg.maxEntity(); e++) {
             if (inputs.contains(e) && transforms.contains(e)){
+
+                if (transforms[e].velocity_x > transforms[e].max_speed) {transforms[e].velocity_x = transforms[e].max_speed;}
+                if (transforms[e].velocity_x < -transforms[e].max_speed) {transforms[e].velocity_x = -transforms[e].max_speed;}
+                if (transforms[e].velocity_y > transforms[e].max_speed) {transforms[e].velocity_y = transforms[e].max_speed;}
+                if (transforms[e].velocity_y < -transforms[e].max_speed) {transforms[e].velocity_y = -transforms[e].max_speed;}
                 if (inputs[e].up) {
                     transforms[e].velocity_y -= 0.1f;
                 }
@@ -71,7 +80,8 @@ struct MovementSystem {
                     transforms[e].velocity_x *= 0.95f; // Friction
                 }
 
-
+                if (transforms[e].rotation > transforms[e].max_rotation_speed) {transforms[e].rotation = transforms[e].max_rotation_speed;}
+                if (transforms[e].rotation < -transforms[e].max_rotation_speed) {transforms[e].rotation = -transforms[e].max_rotation_speed;}
                 if(inputs[e].look_right) {
                     transforms[e].rotation += 0.1f; // Rotate right
                 }
@@ -81,7 +91,7 @@ struct MovementSystem {
 
                 if (!inputs[e].look_right && !inputs[e].look_left) {
                     // Optional: Add some rotational friction if no rotation input is given
-                    transforms[e].rotation *= 0.95f;
+                    transforms[e].rotation *= 0.999f;
                 }
             }
         }

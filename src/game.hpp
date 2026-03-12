@@ -12,7 +12,7 @@ public:
         inputSystem.update(registry);
         movementSystem.update(registry);
         transformSystem.update(registry, dt);
-        spriteSystem.update(registry);
+        spriteSystem.update(registry, dt);
     }
 
     void render(sf::RenderWindow& window) {
@@ -27,14 +27,10 @@ public:
 
     void createPlayer() {
         Entity player = registry.create();
-        registry.getComponent<Transform>()[player] = Transform{0.f, 0.f, 0.f, sf::Vector2f(400.f, 300.f)};
+        registry.getComponent<Transform>()[player] = Transform{0.f, 0.f, 0.f, sf::Vector2f(400.f, 300.f), 100.f, 200.f};
         registry.getComponent<Sprite>()[player] = Sprite{};
-        registry.getComponent<Input>()[player] = Input{false, false, false, false, false};
+        registry.getComponent<Input>()[player] = Input{false, false, false, false, false, false, false};
         registry.getComponent<PlayerTag>()[player] = PlayerTag{3};
-
-        sf::RectangleShape& player_shape = registry.getComponent<Sprite>()[player].shape;
-        sf::Vector2f center = player_shape.getSize();
-        player_shape.setOrigin({center.x / 2.f, center.y / 2.f}); // Center the rectangle on its position
     }
 
     void createCursor() {
