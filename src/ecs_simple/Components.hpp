@@ -6,7 +6,7 @@ struct Velocity {
 };
 
 struct Transform {
-    float rotation; 
+    sf::Angle rotation; 
     float velocity_x, velocity_y;
     sf::Vector2f position;
     float max_speed;

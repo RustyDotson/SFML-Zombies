@@ -1,6 +1,7 @@
 #include "Registry.hpp"
 #include "Components.hpp"
 #include "Entity.hpp"
+#include <math.h>
 #pragma once
 
 struct SpriteSystem{
@@ -12,7 +13,8 @@ struct SpriteSystem{
         for (int e = 1; e <= reg.maxEntity(); e++){
             if (sprites.contains(e) && transforms.contains(e)){
                 sprites[e].shape.setPosition(transforms[e].position);
-                sprites[e].shape.rotate(sf::degrees(transforms[e].rotation)*dt);
+                //sprites[e].shape.rotate(sf::degrees(transforms[e].rotation)*dt);
+                sprites[e].shape.setRotation(transforms[e].rotation);
 
                 //sets the point of rotation in the center of the shape.
                 sf::Vector2f center = sprites[e].shape.getSize(); 
@@ -32,19 +34,28 @@ struct SpriteSystem{
     }
 };
 
+
 struct TransformSystem {
     
-
     void update(Registry& reg, float dt) {
         std::unordered_map<Entity, Transform>& transforms = reg.getComponent<Transform>();
         for (int e = 1; e <= reg.maxEntity(); e++) {
             if (transforms.contains(e)){
+                if (transforms[e].velocity_x > transforms[e].max_speed) {transforms[e].velocity_x = transforms[e].max_speed;}
+                if (transforms[e].velocity_x < -transforms[e].max_speed) {transforms[e].velocity_x = -transforms[e].max_speed;}
+                if (transforms[e].velocity_y > transforms[e].max_speed) {transforms[e].velocity_y = transforms[e].max_speed;}
+                if (transforms[e].velocity_y < -transforms[e].max_speed) {transforms[e].velocity_y = -transforms[e].max_speed;}
+
                 transforms[e].position.x += transforms[e].velocity_x * dt;
                 transforms[e].position.y += transforms[e].velocity_y * dt;
+
+                //if (transforms[e].rotation > transforms[e].max_rotation_speed) {transforms[e].rotation = transforms[e].max_rotation_speed;}
+                //if (transforms[e].rotation < -transforms[e].max_rotation_speed) {transforms[e].rotation = -transforms[e].max_rotation_speed;}
             }
         }
     }
 };
+
 
 struct MovementSystem {
     
@@ -55,10 +66,6 @@ struct MovementSystem {
         for (int e = 1; e <= reg.maxEntity(); e++) {
             if (inputs.contains(e) && transforms.contains(e)){
 
-                if (transforms[e].velocity_x > transforms[e].max_speed) {transforms[e].velocity_x = transforms[e].max_speed;}
-                if (transforms[e].velocity_x < -transforms[e].max_speed) {transforms[e].velocity_x = -transforms[e].max_speed;}
-                if (transforms[e].velocity_y > transforms[e].max_speed) {transforms[e].velocity_y = transforms[e].max_speed;}
-                if (transforms[e].velocity_y < -transforms[e].max_speed) {transforms[e].velocity_y = -transforms[e].max_speed;}
                 if (inputs[e].up) {
                     transforms[e].velocity_y -= 0.1f;
                 }
@@ -72,7 +79,6 @@ struct MovementSystem {
                     transforms[e].velocity_x += 0.1f;
                 }
 
-
                 if (!inputs[e].up && !inputs[e].down) {
                     transforms[e].velocity_y *= 0.95f; // Friction
                 }
@@ -80,23 +86,41 @@ struct MovementSystem {
                     transforms[e].velocity_x *= 0.95f; // Friction
                 }
 
-                if (transforms[e].rotation > transforms[e].max_rotation_speed) {transforms[e].rotation = transforms[e].max_rotation_speed;}
-                if (transforms[e].rotation < -transforms[e].max_rotation_speed) {transforms[e].rotation = -transforms[e].max_rotation_speed;}
-                if(inputs[e].look_right) {
-                    transforms[e].rotation += 0.1f; // Rotate right
-                }
-                if (inputs[e].look_left) {
-                    transforms[e].rotation -= 0.1f; // Rotate left
-                }
+                //if(inputs[e].look_right) {
+                //    transforms[e].rotation += 0.1f; // Rotate right
+                //}
+                //if (inputs[e].look_left) {
+                //    transforms[e].rotation -= 0.1f; // Rotate left
+                //}
 
-                if (!inputs[e].look_right && !inputs[e].look_left) {
+                //if (!inputs[e].look_right && !inputs[e].look_left) {
                     // Optional: Add some rotational friction if no rotation input is given
-                    transforms[e].rotation *= 0.999f;
-                }
+                //    transforms[e].rotation *= 0.999f;
+                //}
+
+                
             }
         }
     }
 };
+
+
+struct AimSystem {
+    void update(Registry& reg) {
+        std::unordered_map<Entity, Input>& inputs = reg.getComponent<Input>();
+        std::unordered_map<Entity, Transform>& transforms = reg.getComponent<Transform>();
+
+        for (int e = 1; e <= reg.maxEntity(); e++) {
+            if (inputs.contains(e) && transforms.contains(e)) {
+                sf::Vector2f direction = sf::Vector2f(inputs[e].mouse_position) - transforms[e].position;
+                std::cout << direction.x << ", " << direction.y << std::endl;
+                sf::Angle angle = sf::degrees(atan2(direction.y, direction.x) * 180 / 3.14159f); // Convert to degrees
+                transforms[e].rotation = angle;
+            }
+        }
+    }
+};
+
 
 struct InputSystem {
 
@@ -115,6 +139,7 @@ struct InputSystem {
                 inputs[e].shoot = sf::Keyboard::isKeyPressed(sf::Keyboard::Key::Space);
                 inputs[e].look_right = sf::Keyboard::isKeyPressed(sf::Keyboard::Key::E);
                 inputs[e].look_left = sf::Keyboard::isKeyPressed(sf::Keyboard::Key::Q);
+                inputs[e].mouse_position = sf::Mouse::getPosition();
             }
         }
     }

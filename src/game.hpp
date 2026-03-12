@@ -12,6 +12,7 @@ public:
         inputSystem.update(registry);
         movementSystem.update(registry);
         transformSystem.update(registry, dt);
+        aimSystem.update(registry);
         spriteSystem.update(registry, dt);
     }
 
@@ -27,7 +28,7 @@ public:
 
     void createPlayer() {
         Entity player = registry.create();
-        registry.getComponent<Transform>()[player] = Transform{0.f, 0.f, 0.f, sf::Vector2f(400.f, 300.f), 100.f, 200.f};
+        registry.getComponent<Transform>()[player] = Transform{sf::degrees(0.0f), 0.f, 0.f, sf::Vector2f(400.f, 300.f), 100.f, 200.f};
         registry.getComponent<Sprite>()[player] = Sprite{};
         registry.getComponent<Input>()[player] = Input{false, false, false, false, false, false, false};
         registry.getComponent<PlayerTag>()[player] = PlayerTag{3};
@@ -50,4 +51,5 @@ private:
     TransformSystem transformSystem;
     MovementSystem movementSystem;
     InputSystem inputSystem;
+    AimSystem aimSystem;
 };
