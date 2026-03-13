@@ -17,8 +17,20 @@ struct SpriteSystem{
                 sprites[e].shape.setRotation(transforms[e].rotation);
 
                 //sets the point of rotation in the center of the shape.
+                //float centerX = sprites[e].shape.getTexture().getSize().x;
+                //float centerY = sprites[e].shape.getTexture().getSize().y;
+                //sprites[e].shape.setOrigin({centerX / 2, centerY / 2}); 
+
                 sf::Vector2f center = sprites[e].shape.getSize(); 
-                sprites[e].shape.setOrigin({center.x / 2.f, center.y / 2.f}); 
+                sprites[e].shape.setOrigin({center.x / 2.f, center.y / 2.f});
+
+
+
+                sprites[e].sprite.setPosition(sf::Vector2f(transforms[e].position.x + 50.f, transforms[e].position.y + 50.f));
+
+                //float centerX = sprites[e].shape.getTexture().getSize().x;
+                //float centerY = sprites[e].shape.getTexture().getSize().y;
+                //sprites[e].shape.setOrigin({centerX / 2, centerY / 2}); 
             }
         }
     }
@@ -28,7 +40,10 @@ struct SpriteSystem{
 
         for (int e = 1; e <= reg.maxEntity(); e++) {
             if (sprites.contains(e)) {
+                std::cout << "Sprite texture: " << sprites[e].texture.getSize().x << " x " << sprites[e].texture.getSize().y << std::endl;
                 window.draw(sprites[e].shape);
+                sprites[e].sprite.setTexture(sprites[e].texture);
+                window.draw(sprites[e].sprite);
             }
         }
     }
@@ -48,9 +63,6 @@ struct TransformSystem {
 
                 transforms[e].position.x += transforms[e].velocity_x * dt;
                 transforms[e].position.y += transforms[e].velocity_y * dt;
-
-                //if (transforms[e].rotation > transforms[e].max_rotation_speed) {transforms[e].rotation = transforms[e].max_rotation_speed;}
-                //if (transforms[e].rotation < -transforms[e].max_rotation_speed) {transforms[e].rotation = -transforms[e].max_rotation_speed;}
             }
         }
     }
@@ -85,20 +97,6 @@ struct MovementSystem {
                 if (!inputs[e].left && !inputs[e].right) {
                     transforms[e].velocity_x *= 0.95f; // Friction
                 }
-
-                //if(inputs[e].look_right) {
-                //    transforms[e].rotation += 0.1f; // Rotate right
-                //}
-                //if (inputs[e].look_left) {
-                //    transforms[e].rotation -= 0.1f; // Rotate left
-                //}
-
-                //if (!inputs[e].look_right && !inputs[e].look_left) {
-                    // Optional: Add some rotational friction if no rotation input is given
-                //    transforms[e].rotation *= 0.999f;
-                //}
-
-                
             }
         }
     }
