@@ -8,8 +8,8 @@
 class Game {
 public:
     
-    void update() {
-        inputSystem.update(registry);
+    void update(sf::RenderWindow& window) {
+        inputSystem.update(registry, window);
         movementSystem.update(registry);
         transformSystem.update(registry, dt);
         aimSystem.update(registry);

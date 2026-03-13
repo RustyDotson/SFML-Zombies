@@ -113,8 +113,9 @@ struct AimSystem {
         for (int e = 1; e <= reg.maxEntity(); e++) {
             if (inputs.contains(e) && transforms.contains(e)) {
                 sf::Vector2f direction = sf::Vector2f(inputs[e].mouse_position) - transforms[e].position;
-                std::cout << direction.x << ", " << direction.y << std::endl;
+                std::cout << "mouse cooredinates: " << direction.x << ", " << direction.y << std::endl;
                 sf::Angle angle = sf::degrees(atan2(direction.y, direction.x) * 180 / 3.14159f); // Convert to degrees
+                std::cout << "Angle: " << angle.asDegrees() << std::endl;
                 transforms[e].rotation = angle;
             }
         }
@@ -125,7 +126,7 @@ struct AimSystem {
 struct InputSystem {
 
 
-    void update(Registry& reg) {
+    void update(Registry& reg, sf::RenderWindow& window) {
         std::unordered_map<Entity, Input>& inputs = reg.getComponent<Input>();
         // This function would be called in the main event loop to update input states
         // For example, you could set inputs[e].up = true when the up key is pressed
@@ -139,7 +140,7 @@ struct InputSystem {
                 inputs[e].shoot = sf::Keyboard::isKeyPressed(sf::Keyboard::Key::Space);
                 inputs[e].look_right = sf::Keyboard::isKeyPressed(sf::Keyboard::Key::E);
                 inputs[e].look_left = sf::Keyboard::isKeyPressed(sf::Keyboard::Key::Q);
-                inputs[e].mouse_position = sf::Mouse::getPosition();
+                inputs[e].mouse_position = sf::Mouse::getPosition(window);
             }
         }
     }

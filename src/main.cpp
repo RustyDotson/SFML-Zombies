@@ -30,7 +30,7 @@ int main(){
         float dt = clock.restart().asSeconds();
         game.updateDeltaTime(dt);
 
-        game.update();
+        game.update(window);
         game.render(window);
 
         
