@@ -32,6 +32,8 @@ public:
         registry.getComponent<Sprite>()[player] = Sprite{};
         registry.getComponent<Input>()[player] = Input{false, false, false, false, false, false, false};
         registry.getComponent<PlayerTag>()[player] = PlayerTag{3};
+
+        registry.getComponent<Sprite>()[player].sprite.setScale({1.5f, 1.5f});
     }
 
     void createCursor() {
