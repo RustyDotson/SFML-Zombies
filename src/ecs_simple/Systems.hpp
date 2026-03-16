@@ -21,12 +21,14 @@ struct SpriteSystem{
                 //float centerY = sprites[e].shape.getTexture().getSize().y;
                 //sprites[e].shape.setOrigin({centerX / 2, centerY / 2}); 
 
-                sf::Vector2f center = sprites[e].shape.getSize(); 
-                sprites[e].shape.setOrigin({center.x / 2.f, center.y / 2.f});
+                sf::Vector2f shape_center = sprites[e].shape.getSize(); 
+                sprites[e].shape.setOrigin({shape_center.x / 2.f, shape_center.y / 2.f});
 
+                sf::Vector2 sprite_center = sprites[e].sprite.getTexture().getSize();
+                sprites[e].sprite.setOrigin({sprite_center.x / 2.f, sprite_center.y / 2.f});
+                sprites[e].sprite.setPosition(sf::Vector2f(transforms[e].position.x, transforms[e].position.y));
+                sprites[e].sprite.setRotation(transforms[e].rotation);
 
-
-                sprites[e].sprite.setPosition(sf::Vector2f(transforms[e].position.x + 50.f, transforms[e].position.y + 50.f));
 
                 //float centerX = sprites[e].shape.getTexture().getSize().x;
                 //float centerY = sprites[e].shape.getTexture().getSize().y;
@@ -41,7 +43,7 @@ struct SpriteSystem{
         for (int e = 1; e <= reg.maxEntity(); e++) {
             if (sprites.contains(e)) {
                 std::cout << "Sprite texture: " << sprites[e].texture.getSize().x << " x " << sprites[e].texture.getSize().y << std::endl;
-                window.draw(sprites[e].shape);
+                //window.draw(sprites[e].shape);
                 sprites[e].sprite.setTexture(sprites[e].texture);
                 window.draw(sprites[e].sprite);
             }

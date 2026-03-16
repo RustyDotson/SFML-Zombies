@@ -19,7 +19,7 @@ struct Health {
 
 struct Sprite {
     sf::RectangleShape shape = sf::RectangleShape(sf::Vector2f(50.f, 50.f));
-    sf::Texture texture = sf::Texture("media/sprites/ship.png", false, sf::IntRect({10, 10}, {32, 32}));
+    sf::Texture texture = sf::Texture("media/sprites/ship.png", false, sf::IntRect({32, 32}, {0, 0}));
     sf::Sprite sprite = sf::Sprite(texture);
 };
 
