@@ -94,10 +94,10 @@ struct MovementSystem {
                 }
 
                 if (!inputs[e].up && !inputs[e].down) {
-                    transforms[e].velocity_y *= 0.95f; // Friction
+                    transforms[e].velocity_y *= 0.999f; // Friction
                 }
                 if (!inputs[e].left && !inputs[e].right) {
-                    transforms[e].velocity_x *= 0.95f; // Friction
+                    transforms[e].velocity_x *= 0.999f; // Friction
                 }
             }
         }
@@ -114,9 +114,9 @@ struct AimSystem {
             if (inputs.contains(e) && transforms.contains(e)) {
                 sf::Vector2f direction = sf::Vector2f(inputs[e].mouse_position) - transforms[e].position;
                 std::cout << "mouse cooredinates: " << direction.x << ", " << direction.y << std::endl;
-                sf::Angle angle = sf::degrees(atan2(direction.y, direction.x) * 180 / 3.14159f); // Convert to degrees
+                sf::Angle angle = sf::degrees((atan2(direction.y, direction.x) * 180 / 3.14159f) + 90.f); // Convert to degrees
                 std::cout << "Angle: " << angle.asDegrees() << std::endl;
-                transforms[e].rotation = angle;
+                transforms[e].rotation = angle; // Adjust for sprite orientation
             }
         }
     }
