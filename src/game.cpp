@@ -3,6 +3,7 @@
 #include "ecs_simple/Entity.hpp"
 #include "ecs_simple/Systems.hpp"
 #include <SFML/Graphics.hpp>
+#include <SFML/Audio.hpp>
 #include "game.hpp"
 
  

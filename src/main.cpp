@@ -8,7 +8,6 @@
 #include <SFML/Window.hpp>
 
 
-
 int main(){
     unsigned int windowSize = 800;
     sf::RenderWindow window(sf::VideoMode({windowSize, windowSize}), "Asteroids!");
@@ -16,6 +15,7 @@ int main(){
     Game game;
     game.createPlayer();
     game.createCursor();
+
 
     sf::Clock clock;
 

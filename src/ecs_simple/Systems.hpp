@@ -32,3 +32,7 @@ struct ShootingSystem {
 struct InputSystem {
     void update(Registry& reg, sf::RenderWindow& window);
 };
+
+struct SoundSystem {
+    void playSound(const std::string& soundFile);
+};

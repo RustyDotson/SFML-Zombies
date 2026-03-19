@@ -2,6 +2,7 @@
 #include "ecs_simple/Registry.hpp"
 #include "ecs_simple/Systems.hpp"
 #include <SFML/Graphics.hpp>
+#include <SFML/Audio.hpp>
 
 class Game {
 public:
