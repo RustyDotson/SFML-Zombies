@@ -16,7 +16,7 @@ public:
 
     void createCursor();
 
-    void createBullet(sf::Angle angle, sf::Vector2f position);
+    void createBullet(sf::Angle angle, float vx, float vy, sf::Vector2f position);
 
     Registry& getRegistry();
 

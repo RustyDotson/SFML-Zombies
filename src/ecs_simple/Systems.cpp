@@ -42,6 +42,7 @@ void SpriteSystem::render(Registry& reg, sf::RenderWindow& window) {
 
 void TransformSystem::update(Registry& reg, float dt) {
         std::unordered_map<Entity, Transform>& transforms = reg.getComponent<Transform>();
+
         for (int e = 1; e <= reg.maxEntity(); e++) {
             if (transforms.contains(e)){
                 if (transforms[e].velocity_x > transforms[e].max_speed) {transforms[e].velocity_x = transforms[e].max_speed;}
@@ -98,7 +99,7 @@ void AimSystem::update(Registry& reg, float dt) {
             if (inputs.contains(e) && transforms.contains(e)) {
                 sf::Vector2f direction = sf::Vector2f(inputs[e].mouse_position) - transforms[e].position;
                 std::cout << "mouse cooredinates: " << direction.x << ", " << direction.y << std::endl;
-                sf::Angle angle = sf::degrees((atan2(direction.y, direction.x) * 180 / 3.14159f) + 90.f); // Convert to degrees
+                sf::Angle angle = sf::degrees((atan2(direction.y, direction.x) * 180 / 3.14159f)); // Convert to degrees
                 std::cout << "Angle: " << angle.asDegrees() << std::endl;
                 transforms[e].rotation = angle; // Adjust for sprite orientation
             }
@@ -109,11 +110,17 @@ void AimSystem::update(Registry& reg, float dt) {
 void ShootingSystem::update(Registry& reg, Game& game) {
     std::unordered_map<Entity, Input>& inputs = reg.getComponent<Input>();
     std::unordered_map<Entity, Transform>& transforms = reg.getComponent<Transform>();
+    std::unordered_map<Entity, PlayerTag>& playerTags = reg.getComponent<PlayerTag>();
+    std::unordered_map<Entity, CursorTag>& cursorTags = reg.getComponent<CursorTag>();
 
     for (int e = 1; e <= reg.maxEntity(); e++) {
         if (inputs.contains(e) && transforms.contains(e)) {
-            if (inputs[e].shoot) {
-                game.createBullet(transforms[e].rotation, transforms[e].position);
+            if (playerTags.contains(e)) {
+                if (inputs[e].shoot) {
+                    float velocity_x = cos(transforms[e].rotation.asRadians()) * 500.f; // Adjust bullet speed
+                    float velocity_y = sin(transforms[e].rotation.asRadians()) * 500.f;
+                    game.createBullet(transforms[e].rotation, velocity_x, velocity_y, transforms[e].position);
+                }
             }
         }
     }

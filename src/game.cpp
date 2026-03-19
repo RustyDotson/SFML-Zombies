@@ -41,9 +41,9 @@ void Game::render(sf::RenderWindow& window) {
         registry.getComponent<CursorTag>()[cursor] = CursorTag{sf::Mouse::getPosition()};
     }
 
-    void Game::createBullet(sf::Angle angle, sf::Vector2f position) {
+    void Game::createBullet(sf::Angle angle, float vx, float vy, sf::Vector2f position) {
             Entity bullet = registry.create();
-            registry.getComponent<Transform>()[bullet] = Transform{angle, 200.f, 200.f, position, 200.f, 200.f};
+            registry.getComponent<Transform>()[bullet] = Transform{angle, vx, vy, position, 5000.f, 800.f};
             registry.getComponent<Sprite>()[bullet] = Sprite{};
             registry.getComponent<BulletTag>()[bullet] = BulletTag{};
     
