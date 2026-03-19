@@ -8,47 +8,30 @@
 
 class Registry {
     public:
-        Entity create() {
-            if (!recycled_ids.empty()){
-                Entity new_entity = recycled_ids.back();
-                recycled_ids.pop_back();
-                return new_entity;
-            }
-            max_entity++;
-            return max_entity;
-        }
+        Entity create();
 
-        Entity maxEntity(){
-            return max_entity;
-        }
+        Entity maxEntity();
 
         template <typename C>
         std::unordered_map<Entity, C>& getComponent();
 
         template<>
-        std::unordered_map<Entity, Sprite>& getComponent<Sprite>() {
-            return sprites;
-        }
+        std::unordered_map<Entity, Sprite>& getComponent<Sprite>();
 
         template<>
-        std::unordered_map<Entity, Transform>& getComponent<Transform>() {
-            return transforms;
-        }
+        std::unordered_map<Entity, Transform>& getComponent<Transform>();
 
         template<>
-        std::unordered_map<Entity, Input>& getComponent<Input>() {
-            return inputs;
-        }
+        std::unordered_map<Entity, Input>& getComponent<Input>();
 
         template<>
-        std::unordered_map<Entity, PlayerTag>& getComponent<PlayerTag>() {
-            return players;
-        }
+        std::unordered_map<Entity, PlayerTag>& getComponent<PlayerTag>();
 
         template<>
-        std::unordered_map<Entity, CursorTag>& getComponent<CursorTag>() {
-            return cursors;
-        }
+        std::unordered_map<Entity, CursorTag>& getComponent<CursorTag>();
+
+        template<>
+        std::unordered_map<Entity, BulletTag>& getComponent<BulletTag>();
 
     private:
         std::vector <uint32_t> recycled_ids;
@@ -58,4 +41,5 @@ class Registry {
         std::unordered_map<Entity, Input> inputs;
         std::unordered_map<Entity, PlayerTag> players;
         std::unordered_map<Entity, CursorTag> cursors;
+        std::unordered_map<Entity, BulletTag> bullets;
 };

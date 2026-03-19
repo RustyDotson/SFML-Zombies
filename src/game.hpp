@@ -1,49 +1,24 @@
 #pragma once
 #include "ecs_simple/Registry.hpp"
-#include "ecs_simple/Components.hpp"
-#include "ecs_simple/Entity.hpp"
 #include "ecs_simple/Systems.hpp"
 #include <SFML/Graphics.hpp>
 
 class Game {
 public:
     
-    void update(sf::RenderWindow& window) {
-        inputSystem.update(registry, window);
-        movementSystem.update(registry);
-        transformSystem.update(registry, dt);
-        aimSystem.update(registry);
-        spriteSystem.update(registry, dt);
-    }
+    void update(sf::RenderWindow& window);
 
-    void render(sf::RenderWindow& window) {
-        window.clear();
-        spriteSystem.render(registry, window);
-        window.display();
-    }
+    void render(sf::RenderWindow& window);
 
-    void updateDeltaTime(float deltaTime) {
-        dt = deltaTime;
-    }
+    void updateDeltaTime(float deltaTime);
 
-    void createPlayer() {
-        Entity player = registry.create();
-        registry.getComponent<Transform>()[player] = Transform{sf::degrees(0.0f), 0.f, 0.f, sf::Vector2f(400.f, 300.f), 200.f, 200.f};
-        registry.getComponent<Sprite>()[player] = Sprite{};
-        registry.getComponent<Input>()[player] = Input{false, false, false, false, false, false, false};
-        registry.getComponent<PlayerTag>()[player] = PlayerTag{3};
+    void createPlayer();
 
-        registry.getComponent<Sprite>()[player].sprite.setScale({1.5f, 1.5f});
-    }
+    void createCursor();
 
-    void createCursor() {
-        Entity cursor = registry.create();
-        registry.getComponent<CursorTag>()[cursor] = CursorTag{sf::Mouse::getPosition()};
-    }
+    void createBullet(sf::Angle angle, sf::Vector2f position);
 
-    Registry& getRegistry() {
-        return registry;
-    }
+    Registry& getRegistry();
 
 private:
     float dt = 0.f;
@@ -54,4 +29,5 @@ private:
     MovementSystem movementSystem;
     InputSystem inputSystem;
     AimSystem aimSystem;
+    ShootingSystem shootingSystem;
 };

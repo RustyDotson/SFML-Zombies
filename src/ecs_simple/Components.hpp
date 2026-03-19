@@ -48,5 +48,7 @@ struct CursorTag {
     sf::Vector2i position;
 };
 
-struct BulletTag {};
+struct BulletTag {
+    float lifetime = 2.f;
+};
 struct AsteroidTag {};

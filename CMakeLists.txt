@@ -20,7 +20,7 @@ FetchContent_Declare(SFML
     SYSTEM)
 FetchContent_MakeAvailable(SFML)
 
-add_executable(main src/main.cpp src/game.hpp src/ecs_simple/Entity.hpp src/ecs_simple/Components.hpp src/ecs_simple/Registry.hpp src/ecs_simple/Systems.hpp)
+add_executable(main src/main.cpp src/game.hpp src/game.cpp src/ecs_simple/Entity.hpp src/ecs_simple/Components.hpp src/ecs_simple/Registry.hpp src/ecs_simple/Registry.cpp src/ecs_simple/Systems.hpp src/ecs_simple/Systems.cpp)
 target_compile_features(main PRIVATE cxx_std_17)
 target_link_libraries(main PRIVATE SFML::Graphics SFML::Window)
 
