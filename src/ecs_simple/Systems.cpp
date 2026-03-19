@@ -107,7 +107,7 @@ void AimSystem::update(Registry& reg, float dt) {
 }
 
 
-void ShootingSystem::update(Registry& reg, Game& game) {
+void ShootingSystem::update(Registry& reg, Game& game, float dt) {
     std::unordered_map<Entity, Input>& inputs = reg.getComponent<Input>();
     std::unordered_map<Entity, Transform>& transforms = reg.getComponent<Transform>();
     std::unordered_map<Entity, PlayerTag>& playerTags = reg.getComponent<PlayerTag>();
@@ -117,12 +117,34 @@ void ShootingSystem::update(Registry& reg, Game& game) {
         if (inputs.contains(e) && transforms.contains(e)) {
             if (playerTags.contains(e)) {
                 if (inputs[e].shoot) {
-                    float velocity_x = cos(transforms[e].rotation.asRadians()) * 500.f; // Adjust bullet speed
-                    float velocity_y = sin(transforms[e].rotation.asRadians()) * 500.f;
-                    game.createBullet(transforms[e].rotation, velocity_x, velocity_y, transforms[e].position);
+                    playerTags[e].timeSinceLastShot += dt;
+                    if (playerTags[e].timeSinceLastShot >= playerTags[e].fireRate) {
+                        playerTags[e].timeSinceLastShot = 0.f; // Reset the timer
+                        float velocity_x = cos(transforms[e].rotation.asRadians()) * 500.f; // Adjust bullet speed
+                        float velocity_y = sin(transforms[e].rotation.asRadians()) * 500.f;
+                        game.createBullet(transforms[e].rotation, velocity_x, velocity_y, transforms[e].position);
+                    } 
+                    else {
+                        continue; // Skip shooting if fire rate not met
+                    } 
                 }
             }
         }
+    }
+
+    // Update bullets separately to avoid iterator issues during erase
+    std::unordered_map<Entity, BulletTag>& bulletTags = reg.getComponent<BulletTag>();
+    std::vector<Entity> bulletsToDestroy;
+    
+    for (auto& [e, bullet] : bulletTags) {
+        bullet.timeAlive += dt;
+        if (bullet.timeAlive >= bullet.lifetime) {
+            bulletsToDestroy.push_back(e);
+        }
+    }
+    
+    for (Entity e : bulletsToDestroy) {
+        reg.destroy(e);
     }
 }
 

@@ -10,6 +10,8 @@ class Registry {
     public:
         Entity create();
 
+        void destroy(Entity entity);
+
         Entity maxEntity();
 
         template <typename C>

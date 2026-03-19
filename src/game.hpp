@@ -10,6 +10,8 @@ public:
 
     void render(sf::RenderWindow& window);
 
+    void destroy(Entity entity);
+
     void updateDeltaTime(float deltaTime);
 
     void createPlayer();

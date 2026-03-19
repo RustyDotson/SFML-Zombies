@@ -42,6 +42,8 @@ struct Lifetime {
 
 struct PlayerTag {
     uint32_t lives = 3;
+    float fireRate = 0.1f;
+    float timeSinceLastShot = 10.f;
 };
 
 struct CursorTag {
@@ -49,6 +51,7 @@ struct CursorTag {
 };
 
 struct BulletTag {
-    float lifetime = 2.f;
+    float lifetime = 0.5f;
+    float timeAlive = 0.f;
 };
 struct AsteroidTag {};

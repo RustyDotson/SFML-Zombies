@@ -25,7 +25,7 @@ struct AimSystem {
 
 
 struct ShootingSystem {
-    void update(Registry& reg, Game& game);
+    void update(Registry& reg, Game& game, float dt);
 };
 
 

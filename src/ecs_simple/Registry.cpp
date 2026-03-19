@@ -7,15 +7,25 @@
 
 
 Entity Registry::create() {
+    std::cout << "Creating entity: " << max_entity + 1 << std::endl;
     if (!recycled_ids.empty()){
         Entity new_entity = recycled_ids.back();
         recycled_ids.pop_back();
         return new_entity;
     }
     max_entity++;
-    std::cout << "Created entity: " << max_entity << std::endl;
     return max_entity;
 }
+
+void Registry::destroy(Entity entity) {
+            recycled_ids.push_back(entity);
+            sprites.erase(entity);
+            transforms.erase(entity);
+            inputs.erase(entity);
+            players.erase(entity);
+            cursors.erase(entity);
+            bullets.erase(entity);
+        }
 
 Entity Registry::maxEntity(){
     return max_entity;
