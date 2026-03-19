@@ -13,6 +13,7 @@ Entity Registry::create() {
         return new_entity;
     }
     max_entity++;
+    std::cout << "Created entity: " << max_entity << std::endl;
     return max_entity;
 }
 

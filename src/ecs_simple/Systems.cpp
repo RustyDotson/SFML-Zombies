@@ -32,7 +32,6 @@ void SpriteSystem::render(Registry& reg, sf::RenderWindow& window) {
 
     for (int e = 1; e <= reg.maxEntity(); e++) {
         if (sprites.contains(e)) {
-            std::cout << "Sprite texture: " << sprites[e].texture.getSize().x << " x " << sprites[e].texture.getSize().y << std::endl;
             //window.draw(sprites[e].shape);
             sprites[e].sprite.setTexture(sprites[e].texture);
             window.draw(sprites[e].sprite);
@@ -61,27 +60,30 @@ void MovementSystem::update(Registry& reg, float dt) {
         std::unordered_map<Entity, Input>& inputs = reg.getComponent<Input>();
         std::unordered_map<Entity, Transform>& transforms = reg.getComponent<Transform>();
 
+        const float acceleration = 100.f; // Adjust this value for faster/slower acceleration
+        const float friction = 0.998f; // Adjust this value for more/less friction
+
         for (int e = 1; e <= reg.maxEntity(); e++) {
             if (inputs.contains(e) && transforms.contains(e)){
 
                 if (inputs[e].up) {
-                    transforms[e].velocity_y -= 0.1f;
+                    transforms[e].velocity_y -= acceleration * dt;
                 }
                 if (inputs[e].down) {
-                    transforms[e].velocity_y += 0.1f;
+                    transforms[e].velocity_y += acceleration * dt;
                 }
                 if (inputs[e].left) {
-                    transforms[e].velocity_x -= 0.1f;
+                    transforms[e].velocity_x -= acceleration * dt;
                 }
                 if (inputs[e].right) {
-                    transforms[e].velocity_x += 0.1f;
+                    transforms[e].velocity_x += acceleration * dt;
                 }
 
                 if (!inputs[e].up && !inputs[e].down) {
-                    transforms[e].velocity_y *= 0.999f; // Friction
+                    transforms[e].velocity_y *= pow(friction, dt); // Friction
                 }
                 if (!inputs[e].left && !inputs[e].right) {
-                    transforms[e].velocity_x *= 0.999f; // Friction
+                    transforms[e].velocity_x *= pow(friction, dt); // Friction
                 }
             }
         }
@@ -129,7 +131,7 @@ void InputSystem::update(Registry& reg, sf::RenderWindow& window) {
                 inputs[e].down = sf::Keyboard::isKeyPressed(sf::Keyboard::Key::S);
                 inputs[e].left = sf::Keyboard::isKeyPressed(sf::Keyboard::Key::A);
                 inputs[e].right = sf::Keyboard::isKeyPressed(sf::Keyboard::Key::D);
-                inputs[e].shoot = sf::Keyboard::isKeyPressed(sf::Keyboard::Key::Space);
+                inputs[e].shoot = sf::Mouse::isButtonPressed(sf::Mouse::Button::Left);
                 inputs[e].look_right = sf::Keyboard::isKeyPressed(sf::Keyboard::Key::E);
                 inputs[e].look_left = sf::Keyboard::isKeyPressed(sf::Keyboard::Key::Q);
                 inputs[e].mouse_position = sf::Mouse::getPosition(window);
