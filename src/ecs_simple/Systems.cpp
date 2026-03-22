@@ -61,8 +61,8 @@ void MovementSystem::update(Registry& reg, float dt) {
         std::unordered_map<Entity, Input>& inputs = reg.getComponent<Input>();
         std::unordered_map<Entity, Transform>& transforms = reg.getComponent<Transform>();
 
-        const float acceleration = 100.f; // Adjust this value for faster/slower acceleration
-        const float friction = 0.998f; // Adjust this value for more/less friction
+        const float acceleration = 250.f; // Adjust this value for faster/slower acceleration
+        const float friction = 0.03f; // Adjust this value for more/less friction
 
         for (int e = 1; e <= reg.maxEntity(); e++) {
             if (inputs.contains(e) && transforms.contains(e)){
@@ -105,7 +105,6 @@ void AimSystem::update(Registry& reg, float dt) {
             }
         }
 }
-
 
 void ShootingSystem::update(Registry& reg, Game& game, float dt) {
     std::unordered_map<Entity, Input>& inputs = reg.getComponent<Input>();

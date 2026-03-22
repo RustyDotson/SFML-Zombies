@@ -19,6 +19,8 @@ public:
 
     void createCursor();
 
+    void createAsteroid();
+
     void createBullet(sf::Angle angle, float vx, float vy, sf::Vector2f position);
 
     Registry& getRegistry();

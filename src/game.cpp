@@ -41,6 +41,18 @@ void Game::createPlayer() {
     registry.getComponent<Sprite>()[player].sprite.setScale({1.5f, 1.5f});
 }
 
+void Game::createAsteroid() {
+    sf::Texture asteroid_texture = sf::Texture("media/sprites/asteroid_large.png", false, sf::IntRect({128, 128}, {0, 0}));
+
+    Entity asteroid = registry.create();
+    registry.getComponent<Transform>()[asteroid] = Transform{sf::degrees(0.0f), 0.f, 0.f, sf::Vector2f(400.f, 400.f), 200.f, 200.f};
+    registry.getComponent<Sprite>()[asteroid] = Sprite{texture: asteroid_texture};
+    registry.getComponent<AsteroidTag>()[asteroid] = AsteroidTag{0, 100.f};
+
+    registry.getComponent<Sprite>()[asteroid].sprite.setScale({1.5f, 1.5f});
+
+}
+
 void Game::createCursor() {
     Entity cursor = registry.create();
     registry.getComponent<CursorTag>()[cursor] = CursorTag{sf::Mouse::getPosition()};

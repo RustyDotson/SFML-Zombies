@@ -14,6 +14,7 @@ int main(){
 
     Game game;
     game.createPlayer();
+    game.createAsteroid();
     game.createCursor();
 
 

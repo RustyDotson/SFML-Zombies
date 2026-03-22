@@ -60,3 +60,8 @@ template<>
 std::unordered_map<Entity, BulletTag>& Registry::getComponent<BulletTag>() {
     return bullets;
 }
+
+template<>
+std::unordered_map<Entity, AsteroidTag>& Registry::getComponent<AsteroidTag>() {
+    return asteroids;
+}
