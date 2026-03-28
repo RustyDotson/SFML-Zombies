@@ -4,7 +4,12 @@
 class Game;
 
 struct SpriteSystem{
-    void update(Registry& reg, float dt);
+    void update(Registry& reg);
+    void render(Registry& reg, sf::RenderWindow& window);
+};
+
+struct CollisionSystem{
+    void update(Registry& reg);
     void render(Registry& reg, sf::RenderWindow& window);
 };
 

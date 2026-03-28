@@ -6,18 +6,12 @@
 #include <math.h>
 
 
-void SpriteSystem::update(Registry& reg, float dt){
+void SpriteSystem::update(Registry& reg){
         std::unordered_map<Entity, Sprite>& sprites = reg.getComponent<Sprite>();
         std::unordered_map<Entity, Transform>& transforms = reg.getComponent<Transform>();
 
         for (int e = 1; e <= reg.maxEntity(); e++){
             if (sprites.contains(e) && transforms.contains(e)){
-                sprites[e].shape.setPosition(transforms[e].position);
-                sprites[e].shape.setRotation(transforms[e].rotation);
-
-                sf::Vector2f shape_center = sprites[e].shape.getSize(); 
-                sprites[e].shape.setOrigin({shape_center.x / 2.f, shape_center.y / 2.f});
-
                 sf::Vector2 sprite_center = sprites[e].sprite.getTexture().getSize();
                 sprites[e].sprite.setOrigin({sprite_center.x / 2.f, sprite_center.y / 2.f});
                 sprites[e].sprite.setPosition(sf::Vector2f(transforms[e].position.x, transforms[e].position.y));
@@ -35,6 +29,35 @@ void SpriteSystem::render(Registry& reg, sf::RenderWindow& window) {
             //window.draw(sprites[e].shape);
             sprites[e].sprite.setTexture(sprites[e].texture);
             window.draw(sprites[e].sprite);
+        }
+    }
+}
+
+
+void CollisionSystem::update(Registry& reg) {
+    std::unordered_map<Entity, CollisionBox>& collision_boxes = reg.getComponent<CollisionBox>();
+    std::unordered_map<Entity, Transform>& transforms = reg.getComponent<Transform>();
+
+    for (int e = 1; e <= reg.maxEntity(); e++) {
+        if (collision_boxes.contains(e) && transforms.contains(e)) {
+            float shape_radius = collision_boxes[e].collision_shape.getRadius();
+
+            collision_boxes[e].collision_shape.setRadius(64.f);
+            collision_boxes[e].collision_shape.setOrigin({shape_radius, shape_radius});
+            collision_boxes[e].collision_shape.setPosition(transforms[e].position);
+            collision_boxes[e].collision_shape.setRotation(transforms[e].rotation);
+
+        }
+    }
+}
+
+
+void CollisionSystem::render(Registry& reg, sf::RenderWindow& window) {
+    std::unordered_map<Entity, CollisionBox>& collision_boxes = reg.getComponent<CollisionBox>();
+
+    for (int e = 1; e <= reg.maxEntity(); e++) {
+        if (collision_boxes.contains(e)) {
+            window.draw(collision_boxes[e].collision_shape);
         }
     }
 }

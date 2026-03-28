@@ -35,4 +35,5 @@ private:
     InputSystem inputSystem;
     AimSystem aimSystem;
     ShootingSystem shootingSystem;
+    CollisionSystem collisionSystem;
 };

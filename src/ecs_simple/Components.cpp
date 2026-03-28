@@ -1,5 +1,4 @@
 #include <SFML/Graphics.hpp>
-#include <SFML/Audio.hpp>
 #pragma once
 
 struct Velocity {
@@ -12,7 +11,6 @@ struct Transform {
     sf::Vector2f position;
     float max_speed;
     float max_rotation_speed;
-    float size_x, size_y;
 };
 
 struct Health {
@@ -20,12 +18,17 @@ struct Health {
 };
 
 struct Sprite {
+    sf::RectangleShape shape = sf::RectangleShape(sf::Vector2f(50.f, 50.f));
     sf::Texture texture = sf::Texture("media/sprites/ship.png", false, sf::IntRect({32, 32}, {0, 0}));
     sf::Sprite sprite = sf::Sprite(texture);
 };
 
-struct CollisionBox {
-    sf::CircleShape collision_shape = sf::CircleShape(20.f); // Default radius, can be set per entity
+struct Shape {
+    sf::RectangleShape shape = sf::RectangleShape(sf::Vector2f(50.f, 50.f));
+};
+
+struct Collision {
+    float radius;
 };
 
 struct Input {
@@ -39,9 +42,6 @@ struct Lifetime {
 
 struct PlayerTag {
     uint32_t lives = 3;
-    float fireRate = 0.1f;
-    float timeSinceLastShot = 10.f;
-    float speed = 200.f;
 };
 
 struct CursorTag {
@@ -49,12 +49,6 @@ struct CursorTag {
 };
 
 struct BulletTag {
-    float lifetime = 0.5f;
-    float timeAlive = 0.f;
+    float lifetime = 2.f;
 };
-
-struct AsteroidTag {
-    int size = 0; // 0 = large, 1 = medium, 2 = small
-    float speed = 100.f;
-
-};
+struct AsteroidTag {};

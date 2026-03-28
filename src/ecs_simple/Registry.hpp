@@ -21,6 +21,9 @@ class Registry {
         std::unordered_map<Entity, Sprite>& getComponent<Sprite>();
 
         template<>
+        std::unordered_map<Entity, CollisionBox>& getComponent<CollisionBox>();
+
+        template<>
         std::unordered_map<Entity, Transform>& getComponent<Transform>();
 
         template<>
@@ -42,6 +45,7 @@ class Registry {
         std::vector <uint32_t> recycled_ids;
         uint32_t max_entity = 0;
         std::unordered_map<Entity, Sprite> sprites;
+        std::unordered_map<Entity, CollisionBox> collision_boxes;
         std::unordered_map<Entity, Transform> transforms;
         std::unordered_map<Entity, Input> inputs;
         std::unordered_map<Entity, PlayerTag> players;

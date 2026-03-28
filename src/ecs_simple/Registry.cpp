@@ -20,6 +20,7 @@ Entity Registry::create() {
 void Registry::destroy(Entity entity) {
             recycled_ids.push_back(entity);
             sprites.erase(entity);
+            collision_boxes.erase(entity);
             transforms.erase(entity);
             inputs.erase(entity);
             players.erase(entity);
@@ -34,6 +35,11 @@ Entity Registry::maxEntity(){
 template<>
 std::unordered_map<Entity, Sprite>& Registry::getComponent<Sprite>() {
     return sprites;
+}
+
+template<>
+std::unordered_map<Entity, CollisionBox>& Registry::getComponent<CollisionBox>() {
+    return collision_boxes;
 }
 
 template<>

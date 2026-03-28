@@ -1,16 +1,21 @@
+#include "game.hpp"
 #include "ecs_simple/Entity.hpp"
 #include "ecs_simple/Registry.hpp"
 #include "ecs_simple/Components.hpp"
 #include "ecs_simple/Systems.hpp"
-#include "game.hpp"
 #include <iostream>
 #include <SFML/Graphics.hpp>
 #include <SFML/Window.hpp>
 
 
 int main(){
+    sf::ContextSettings settings;
+    settings.antiAliasingLevel = 8;
+
     unsigned int windowSize = 800;
-    sf::RenderWindow window(sf::VideoMode({windowSize, windowSize}), "Asteroids!");
+    sf::RenderWindow window(sf::VideoMode({windowSize, windowSize}), "Asteroids!", sf::Style::Default, sf::State::Windowed, settings);
+
+    
 
     Game game;
     game.createPlayer();

@@ -13,12 +13,14 @@ void Game::update(sf::RenderWindow& window) {
     transformSystem.update(registry, dt);
     aimSystem.update(registry, dt);
     shootingSystem.update(registry, *this, dt);
-    spriteSystem.update(registry, dt);
+    collisionSystem.update(registry);
+    spriteSystem.update(registry);
 }
 
 void Game::render(sf::RenderWindow& window) {
     window.clear();
     spriteSystem.render(registry, window);
+    collisionSystem.render(registry, window);
     window.display();
 }
 
@@ -46,10 +48,13 @@ void Game::createAsteroid() {
 
     Entity asteroid = registry.create();
     registry.getComponent<Transform>()[asteroid] = Transform{sf::degrees(0.0f), 0.f, 0.f, sf::Vector2f(400.f, 400.f), 200.f, 200.f};
-    registry.getComponent<Sprite>()[asteroid] = Sprite{texture: asteroid_texture};
+    registry.getComponent<Sprite>()[asteroid] = Sprite{.texture = asteroid_texture};
     registry.getComponent<AsteroidTag>()[asteroid] = AsteroidTag{0, 100.f};
 
     registry.getComponent<Sprite>()[asteroid].sprite.setScale({1.5f, 1.5f});
+
+    registry.getComponent<CollisionBox>()[asteroid].collision_shape.setPosition(sf::Vector2f(400.f, 400.f));
+    registry.getComponent<CollisionBox>()[asteroid].collision_shape.setRadius(10.f);
 
 }
 
@@ -63,11 +68,15 @@ void Game::createBullet(sf::Angle angle, float vx, float vy, sf::Vector2f positi
         registry.getComponent<Transform>()[bullet] = Transform{angle, vx, vy, position, 5000.f, 800.f};
         registry.getComponent<Sprite>()[bullet] = Sprite{};
         registry.getComponent<BulletTag>()[bullet] = BulletTag{};
+        registry.getComponent<CollisionBox>()[bullet] = CollisionBox{};
 
-
+        //std::unordered_map<Entity, Sprite>& sprite = registry.getComponent<Sprite>()[bullet];
         registry.getComponent<Sprite>()[bullet].texture.loadFromFile("media/sprites/bullet.png");
         registry.getComponent<Sprite>()[bullet].sprite.setScale({1.5f, 1.5f});
         registry.getComponent<Sprite>()[bullet].sprite.setTexture(registry.getComponent<Sprite>()[bullet].texture);
+
+        registry.getComponent<CollisionBox>()[bullet].collision_shape.setPosition(position);
+        registry.getComponent<CollisionBox>()[bullet].collision_shape.setRadius(10.f);
 }
 
 Registry& Game::getRegistry() {
