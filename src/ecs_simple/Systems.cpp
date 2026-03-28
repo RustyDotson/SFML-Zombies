@@ -12,6 +12,8 @@ void SpriteSystem::update(Registry& reg){
 
         for (int e = 1; e <= reg.maxEntity(); e++){
             if (sprites.contains(e) && transforms.contains(e)){
+                sprites[e].sprite.setScale({2.f, 2.f});
+
                 sf::Vector2 sprite_center = sprites[e].sprite.getTexture().getSize();
                 sprites[e].sprite.setOrigin({sprite_center.x / 2.f, sprite_center.y / 2.f});
                 sprites[e].sprite.setPosition(sf::Vector2f(transforms[e].position.x, transforms[e].position.y));
@@ -42,7 +44,7 @@ void CollisionSystem::update(Registry& reg) {
         if (collision_boxes.contains(e) && transforms.contains(e)) {
             float shape_radius = collision_boxes[e].collision_shape.getRadius();
 
-            collision_boxes[e].collision_shape.setRadius(64.f);
+            collision_boxes[e].collision_shape.setRadius(transforms[e].size_x); // Assuming size_x is the diameter of the collision box
             collision_boxes[e].collision_shape.setOrigin({shape_radius, shape_radius});
             collision_boxes[e].collision_shape.setPosition(transforms[e].position);
             collision_boxes[e].collision_shape.setRotation(transforms[e].rotation);

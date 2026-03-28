@@ -20,7 +20,7 @@ struct Health {
 };
 
 struct Sprite {
-    sf::Texture texture = sf::Texture("media/sprites/ship.png", false, sf::IntRect({32, 32}, {0, 0}));
+    sf::Texture texture = sf::Texture("media/sprites/ship.png", false, sf::IntRect());
     sf::Sprite sprite = sf::Sprite(texture);
 };
 
