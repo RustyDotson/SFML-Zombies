@@ -60,6 +60,8 @@ void CollisionSystem::update_bulletcollisions(Registry& reg) {
     std::unordered_map<Entity, BulletTag>& bulletTags = reg.getComponent<BulletTag>();
     std::unordered_map<Entity, AsteroidTag>& asteroidTags = reg.getComponent<AsteroidTag>();
 
+    std::vector<Entity> entities_to_kill;
+
     for (const auto& [bullet, _] : bulletTags) {
         std::cout << "Checking bullet: " << bullet << std::endl;
         sf::CircleShape bullet_hitbox = collision_boxes[bullet].collision_shape;
@@ -76,8 +78,14 @@ void CollisionSystem::update_bulletcollisions(Registry& reg) {
 
             if (distance < asteroid_hitbox.getRadius() + bullet_hitbox.getRadius()){
                 std::cout << "collision happening!!!!!!!!!" << std::endl;
+                entities_to_kill.push_back(bullet);
+                entities_to_kill.push_back(asteroid);
             }
         }
+    }
+
+    for (Entity e : entities_to_kill) {
+        reg.destroy(e);
     }
 }
 
@@ -158,6 +166,7 @@ void AimSystem::update(Registry& reg, float dt) {
             }
         }
 }
+
 
 void ShootingSystem::update(Registry& reg, Game& game, float dt) {
     std::unordered_map<Entity, Input>& inputs = reg.getComponent<Input>();
