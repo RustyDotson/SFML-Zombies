@@ -159,9 +159,9 @@ void AimSystem::update(Registry& reg, float dt) {
         for (int e = 1; e <= reg.maxEntity(); e++) {
             if (inputs.contains(e) && transforms.contains(e)) {
                 sf::Vector2f direction = sf::Vector2f(inputs[e].mouse_position) - transforms[e].position;
-                std::cout << "mouse cooredinates: " << direction.x << ", " << direction.y << std::endl;
+                //std::cout << "mouse cooredinates: " << direction.x << ", " << direction.y << std::endl;
                 sf::Angle angle = sf::degrees((atan2(direction.y, direction.x) * 180 / 3.14159f)); // Convert to degrees
-                std::cout << "Angle: " << angle.asDegrees() << std::endl;
+                //std::cout << "Angle: " << angle.asDegrees() << std::endl;
                 transforms[e].rotation = angle; // Adjust for sprite orientation
             }
         }

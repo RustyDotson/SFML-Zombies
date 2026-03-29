@@ -26,6 +26,7 @@ void Registry::destroy(Entity entity) {
             players.erase(entity);
             cursors.erase(entity);
             bullets.erase(entity);
+            asteroids.erase(entity);
         }
 
 Entity Registry::maxEntity(){
