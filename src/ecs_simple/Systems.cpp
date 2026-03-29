@@ -4,6 +4,7 @@
 #include "Entity.hpp"
 #include "../game.hpp"
 #include <math.h>
+#include <iostream>
 
 
 void SpriteSystem::update(Registry& reg){
@@ -36,7 +37,7 @@ void SpriteSystem::render(Registry& reg, sf::RenderWindow& window) {
 }
 
 
-void CollisionSystem::update(Registry& reg) {
+void CollisionSystem::update_hitbox(Registry& reg) {
     std::unordered_map<Entity, CollisionBox>& collision_boxes = reg.getComponent<CollisionBox>();
     std::unordered_map<Entity, Transform>& transforms = reg.getComponent<Transform>();
 
@@ -49,6 +50,33 @@ void CollisionSystem::update(Registry& reg) {
             collision_boxes[e].collision_shape.setPosition(transforms[e].position);
             collision_boxes[e].collision_shape.setRotation(transforms[e].rotation);
 
+        }
+    }
+}
+
+
+void CollisionSystem::update_bulletcollisions(Registry& reg) {
+    std::unordered_map<Entity, CollisionBox>& collision_boxes = reg.getComponent<CollisionBox>();
+    std::unordered_map<Entity, BulletTag>& bulletTags = reg.getComponent<BulletTag>();
+    std::unordered_map<Entity, AsteroidTag>& asteroidTags = reg.getComponent<AsteroidTag>();
+
+    for (const auto& [bullet, _] : bulletTags) {
+        std::cout << "Checking bullet: " << bullet << std::endl;
+        sf::CircleShape bullet_hitbox = collision_boxes[bullet].collision_shape;
+        for (const auto& [asteroid, _] : asteroidTags) {
+            std::cout << "checking asteroid: " << asteroid << std::endl;
+            sf::CircleShape asteroid_hitbox = collision_boxes[asteroid].collision_shape;
+            sf::Vector2f asteroid_coords = asteroid_hitbox.getPosition();
+            sf::Vector2f bullet_coords = bullet_hitbox.getPosition();
+
+            float dx = asteroid_coords.x - bullet_coords.x;
+            float dy = asteroid_coords.y - bullet_coords.y;
+
+            float distance = sqrt(pow(dx, 2) + pow(dy, 2));
+
+            if (distance < asteroid_hitbox.getRadius() + bullet_hitbox.getRadius()){
+                std::cout << "collision happening!!!!!!!!!" << std::endl;
+            }
         }
     }
 }

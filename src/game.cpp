@@ -13,7 +13,8 @@ void Game::update(sf::RenderWindow& window) {
     transformSystem.update(registry, dt);
     aimSystem.update(registry, dt);
     shootingSystem.update(registry, *this, dt);
-    collisionSystem.update(registry);
+    collisionSystem.update_hitbox(registry);
+    collisionSystem.update_bulletcollisions(registry);
     spriteSystem.update(registry);
 }
 

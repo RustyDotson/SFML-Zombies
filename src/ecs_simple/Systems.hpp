@@ -9,7 +9,8 @@ struct SpriteSystem{
 };
 
 struct CollisionSystem{
-    void update(Registry& reg);
+    void update_hitbox(Registry& reg);
+    void update_bulletcollisions(Registry& reg);
     void render(Registry& reg, sf::RenderWindow& window);
 };
 
