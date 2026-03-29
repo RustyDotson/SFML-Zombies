@@ -36,4 +36,6 @@ private:
     AimSystem aimSystem;
     ShootingSystem shootingSystem;
     CollisionSystem collisionSystem;
+    SpawnSystem spawnSystem;
+
 };

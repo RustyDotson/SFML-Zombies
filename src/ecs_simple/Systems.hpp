@@ -39,6 +39,13 @@ struct InputSystem {
     void update(Registry& reg, sf::RenderWindow& window);
 };
 
+struct SpawnSystem {
+    void createPlayer(Registry& reg);
+    void createAsteroid(Registry& reg);
+    void createCursor(Registry& reg);
+    void createBullet(Registry& reg, sf::Angle angle, float vx, float vy, sf::Vector2f position);
+};
+
 struct SoundSystem {
     void playSound(const std::string& soundFile);
 };

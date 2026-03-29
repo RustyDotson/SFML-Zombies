@@ -7,6 +7,7 @@
 #include <iostream>
 
 
+//SPRITE SYSTEMS
 void SpriteSystem::update(Registry& reg){
         std::unordered_map<Entity, Sprite>& sprites = reg.getComponent<Sprite>();
         std::unordered_map<Entity, Transform>& transforms = reg.getComponent<Transform>();
@@ -37,6 +38,7 @@ void SpriteSystem::render(Registry& reg, sf::RenderWindow& window) {
 }
 
 
+//COLLISION SYSTEMS
 void CollisionSystem::update_hitbox(Registry& reg) {
     std::unordered_map<Entity, CollisionBox>& collision_boxes = reg.getComponent<CollisionBox>();
     std::unordered_map<Entity, Transform>& transforms = reg.getComponent<Transform>();
@@ -101,6 +103,7 @@ void CollisionSystem::render(Registry& reg, sf::RenderWindow& window) {
 }
 
 
+//TRANSFORM SYSTEMS
 void TransformSystem::update(Registry& reg, float dt) {
         std::unordered_map<Entity, Transform>& transforms = reg.getComponent<Transform>();
 
@@ -118,6 +121,7 @@ void TransformSystem::update(Registry& reg, float dt) {
 }
 
 
+//INPUT SYSTEMS
 void MovementSystem::update(Registry& reg, float dt) {
         std::unordered_map<Entity, Input>& inputs = reg.getComponent<Input>();
         std::unordered_map<Entity, Transform>& transforms = reg.getComponent<Transform>();
@@ -184,6 +188,7 @@ void ShootingSystem::update(Registry& reg, Game& game, float dt) {
                         float velocity_x = cos(transforms[e].rotation.asRadians()) * 500.f; // Adjust bullet speed
                         float velocity_y = sin(transforms[e].rotation.asRadians()) * 500.f;
                         game.createBullet(transforms[e].rotation, velocity_x, velocity_y, transforms[e].position);
+                        //spawnSystem.createBullet(reg, transforms[e].rotation, velocity_x, velocity_y, transforms[e].position);
                     } 
                     else {
                         continue; // Skip shooting if fire rate not met
@@ -227,4 +232,62 @@ void InputSystem::update(Registry& reg, sf::RenderWindow& window) {
                 inputs[e].mouse_position = sf::Mouse::getPosition(window);
             }
         }
+}
+
+
+//SPAWNING SYSTEMS
+void SpawnSystem::createPlayer(Registry& reg) {
+    Entity player = reg.create();
+    reg.getComponent<Transform>()[player] = Transform{sf::degrees(0.0f), 0.f, 0.f, sf::Vector2f(400.f, 400.f), 200.f, 200.f, 32.f, 32.f};
+    reg.getComponent<Sprite>()[player] = Sprite{};
+    reg.getComponent<Input>()[player] = Input{false, false, false, false, false, false, false};
+    reg.getComponent<PlayerTag>()[player] = PlayerTag{3};
+
+    reg.getComponent<Sprite>()[player].sprite.setScale({2.f, 2.f});
+
+    reg.getComponent<CollisionBox>()[player].collision_shape.setPosition(sf::Vector2f(400.f, 400.f));
+    reg.getComponent<CollisionBox>()[player].collision_shape.setFillColor(sf::Color::Transparent);
+    reg.getComponent<CollisionBox>()[player].collision_shape.setOutlineColor(sf::Color::Red);
+    reg.getComponent<CollisionBox>()[player].collision_shape.setOutlineThickness(2.f);
+}
+
+void SpawnSystem::createAsteroid(Registry& reg) {
+    sf::Texture asteroid_texture = sf::Texture("media/sprites/asteroid_large.png", false, sf::IntRect());
+
+    Entity asteroid = reg.create();
+    reg.getComponent<Transform>()[asteroid] = Transform{sf::degrees(0.0f), 0.f, 0.f, sf::Vector2f(400.f, 400.f), 200.f, 200.f, 64.f, 64.f};
+    reg.getComponent<Sprite>()[asteroid] = Sprite{.texture = asteroid_texture};
+    reg.getComponent<AsteroidTag>()[asteroid] = AsteroidTag{0, 100.f};
+
+    reg.getComponent<Sprite>()[asteroid].sprite.setScale({2.f, 2.f});
+
+    reg.getComponent<CollisionBox>()[asteroid].collision_shape.setPosition(sf::Vector2f(400.f, 400.f));
+    reg.getComponent<CollisionBox>()[asteroid].collision_shape.setRadius(reg.getComponent<Transform>()[asteroid].size_x / 2.f); // Set radius to match the size of the asteroid sprite
+    reg.getComponent<CollisionBox>()[asteroid].collision_shape.setFillColor(sf::Color::Transparent);
+    reg.getComponent<CollisionBox>()[asteroid].collision_shape.setOutlineColor(sf::Color::Green);
+    reg.getComponent<CollisionBox>()[asteroid].collision_shape.setOutlineThickness(2.f);
+
+}
+
+void SpawnSystem::createCursor(Registry& reg) {
+    Entity cursor = reg.create();
+    reg.getComponent<CursorTag>()[cursor] = CursorTag{sf::Mouse::getPosition()};
+}
+
+void SpawnSystem::createBullet(Registry& reg, sf::Angle angle, float vx, float vy, sf::Vector2f position) {
+        Entity bullet = reg.create();
+        reg.getComponent<Transform>()[bullet] = Transform{angle, vx, vy, position, 5000.f, 800.f, 8.f, 8.f};
+        reg.getComponent<Sprite>()[bullet] = Sprite{};
+        reg.getComponent<BulletTag>()[bullet] = BulletTag{};
+        reg.getComponent<CollisionBox>()[bullet] = CollisionBox{};
+
+        //std::unordered_map<Entity, Sprite>& sprite = reg.getComponent<Sprite>()[bullet];
+        reg.getComponent<Sprite>()[bullet].texture.loadFromFile("media/sprites/bullet.png");
+        reg.getComponent<Sprite>()[bullet].sprite.setTexture(reg.getComponent<Sprite>()[bullet].texture);
+
+
+        reg.getComponent<CollisionBox>()[bullet].collision_shape.setPosition(position);
+        reg.getComponent<CollisionBox>()[bullet].collision_shape.setFillColor(sf::Color::Transparent);
+        reg.getComponent<CollisionBox>()[bullet].collision_shape.setOutlineColor(sf::Color::Blue);
+        reg.getComponent<CollisionBox>()[bullet].collision_shape.setOutlineThickness(2.f);
 }
