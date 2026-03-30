@@ -16,7 +16,9 @@ void Game::update(sf::RenderWindow& window) {
     shootingSystem.update(registry, *this, dt);
     collisionSystem.update_hitbox(registry);
     collisionSystem.update_bulletcollisions(registry);
+    spawnSystem.manageAsteroids(registry, window, *this, 10);
     spriteSystem.update(registry);
+    
 }
 
 void Game::render(sf::RenderWindow& window) {
@@ -40,7 +42,7 @@ void Game::createPlayer() {
 }
 
 void Game::createAsteroid() {
-    spawnSystem.createAsteroid(registry);
+    spawnSystem.createAsteroid(registry, 20.f, 400.f, {400, 400});
 }
 
 void Game::createCursor() {

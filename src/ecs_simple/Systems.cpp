@@ -6,8 +6,10 @@
 #include <math.h>
 #include <iostream>
 
-
+////////////////////////////////////////////////////////////////////////////////////
 //SPRITE SYSTEMS
+////////////////////////////////////////////////////////////////////////////////////
+
 void SpriteSystem::update(Registry& reg){
         std::unordered_map<Entity, Sprite>& sprites = reg.getComponent<Sprite>();
         std::unordered_map<Entity, Transform>& transforms = reg.getComponent<Transform>();
@@ -37,8 +39,10 @@ void SpriteSystem::render(Registry& reg, sf::RenderWindow& window) {
     }
 }
 
-
+////////////////////////////////////////////////////////////////////////////////////
 //COLLISION SYSTEMS
+////////////////////////////////////////////////////////////////////////////////////
+
 void CollisionSystem::update_hitbox(Registry& reg) {
     std::unordered_map<Entity, CollisionBox>& collision_boxes = reg.getComponent<CollisionBox>();
     std::unordered_map<Entity, Transform>& transforms = reg.getComponent<Transform>();
@@ -65,10 +69,10 @@ void CollisionSystem::update_bulletcollisions(Registry& reg) {
     std::vector<Entity> entities_to_kill;
 
     for (const auto& [bullet, _] : bulletTags) {
-        std::cout << "Checking bullet: " << bullet << std::endl;
+        //std::cout << "Checking bullet: " << bullet << std::endl;
         sf::CircleShape bullet_hitbox = collision_boxes[bullet].collision_shape;
         for (const auto& [asteroid, _] : asteroidTags) {
-            std::cout << "checking asteroid: " << asteroid << std::endl;
+            //std::cout << "checking asteroid: " << asteroid << std::endl;
             sf::CircleShape asteroid_hitbox = collision_boxes[asteroid].collision_shape;
             sf::Vector2f asteroid_coords = asteroid_hitbox.getPosition();
             sf::Vector2f bullet_coords = bullet_hitbox.getPosition();
@@ -79,14 +83,24 @@ void CollisionSystem::update_bulletcollisions(Registry& reg) {
             float distance = sqrt(pow(dx, 2) + pow(dy, 2));
 
             if (distance < asteroid_hitbox.getRadius() + bullet_hitbox.getRadius()){
-                std::cout << "collision happening!!!!!!!!!" << std::endl;
-                entities_to_kill.push_back(bullet);
+                std::cout << "collision happening between bullet entity " << bullet << " and asteroid entity " << asteroid << std::endl;
+                bool bullet_in_killqueue = false;
+
+                if (std::find(entities_to_kill.begin(), entities_to_kill.end(), bullet) == entities_to_kill.end()){
+                    bullet_in_killqueue = true;
+                }
+
+                if (bullet_in_killqueue) {
+                    entities_to_kill.push_back(bullet);
+                }
                 entities_to_kill.push_back(asteroid);
+                
             }
         }
     }
 
     for (Entity e : entities_to_kill) {
+        std::cout << "killing entity " << e << std::endl;
         reg.destroy(e);
     }
 }
@@ -102,8 +116,10 @@ void CollisionSystem::render(Registry& reg, sf::RenderWindow& window) {
     }
 }
 
-
+////////////////////////////////////////////////////////////////////////////////////
 //TRANSFORM SYSTEMS
+////////////////////////////////////////////////////////////////////////////////////
+
 void TransformSystem::update(Registry& reg, float dt) {
         std::unordered_map<Entity, Transform>& transforms = reg.getComponent<Transform>();
 
@@ -120,8 +136,10 @@ void TransformSystem::update(Registry& reg, float dt) {
         }
 }
 
-
+////////////////////////////////////////////////////////////////////////////////////
 //INPUT SYSTEMS
+////////////////////////////////////////////////////////////////////////////////////
+
 void MovementSystem::update(Registry& reg, float dt) {
         std::unordered_map<Entity, Input>& inputs = reg.getComponent<Input>();
         std::unordered_map<Entity, Transform>& transforms = reg.getComponent<Transform>();
@@ -234,8 +252,10 @@ void InputSystem::update(Registry& reg, sf::RenderWindow& window) {
         }
 }
 
-
+////////////////////////////////////////////////////////////////////////////////////
 //SPAWNING SYSTEMS
+////////////////////////////////////////////////////////////////////////////////////
+
 void SpawnSystem::createPlayer(Registry& reg) {
     Entity player = reg.create();
     reg.getComponent<Transform>()[player] = Transform{sf::degrees(0.0f), 0.f, 0.f, sf::Vector2f(400.f, 400.f), 200.f, 200.f, 32.f, 32.f};
@@ -251,11 +271,12 @@ void SpawnSystem::createPlayer(Registry& reg) {
     reg.getComponent<CollisionBox>()[player].collision_shape.setOutlineThickness(2.f);
 }
 
-void SpawnSystem::createAsteroid(Registry& reg) {
+
+void SpawnSystem::createAsteroid(Registry& reg, float vx, float vy, sf::Vector2f position) {
     sf::Texture asteroid_texture = sf::Texture("media/sprites/asteroid_large.png", false, sf::IntRect());
 
     Entity asteroid = reg.create();
-    reg.getComponent<Transform>()[asteroid] = Transform{sf::degrees(0.0f), 0.f, 0.f, sf::Vector2f(400.f, 400.f), 200.f, 200.f, 64.f, 64.f};
+    reg.getComponent<Transform>()[asteroid] = Transform{sf::degrees(0.0f), 10.f, 10.f, sf::Vector2f(400.f, 400.f), 200.f, 200.f, 64.f, 64.f};
     reg.getComponent<Sprite>()[asteroid] = Sprite{.texture = asteroid_texture};
     reg.getComponent<AsteroidTag>()[asteroid] = AsteroidTag{0, 100.f};
 
@@ -269,10 +290,23 @@ void SpawnSystem::createAsteroid(Registry& reg) {
 
 }
 
+
+void SpawnSystem::manageAsteroids(Registry& reg, sf::RenderWindow& window, Game& game, uint32_t maxAsteroids) {
+    std::unordered_map<Entity, AsteroidTag> asteroids = reg.getComponent<AsteroidTag>();
+
+    //std::cout << "number of asteroids alive: " << asteroids.size() << std::endl;
+
+    if (asteroids.size() < maxAsteroids) {
+        game.createAsteroid();
+    }
+}
+
+
 void SpawnSystem::createCursor(Registry& reg) {
     Entity cursor = reg.create();
     reg.getComponent<CursorTag>()[cursor] = CursorTag{sf::Mouse::getPosition()};
 }
+
 
 void SpawnSystem::createBullet(Registry& reg, sf::Angle angle, float vx, float vy, sf::Vector2f position) {
         Entity bullet = reg.create();
