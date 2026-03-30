@@ -10,15 +10,17 @@
 void Game::update(sf::RenderWindow& window) {
     inputSystem.update(registry, window);
     movementSystem.update(registry, dt);
-    transformSystem.update(registry, dt);
+    
     aimSystem.update(registry, dt);
     //shootingSystem.update(registry, *this, dt);
     shootingSystem.update(registry, *this, dt);
+    
     collisionSystem.update_hitbox(registry);
     collisionSystem.update_bulletcollisions(registry);
     spawnSystem.manageAsteroids(registry, window, *this, 10);
-    spriteSystem.update(registry);
     
+    transformSystem.update(registry, dt);
+    spriteSystem.update(registry);
 }
 
 void Game::render(sf::RenderWindow& window) {

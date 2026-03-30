@@ -85,15 +85,16 @@ void CollisionSystem::update_bulletcollisions(Registry& reg) {
             if (distance < asteroid_hitbox.getRadius() + bullet_hitbox.getRadius()){
                 std::cout << "collision happening between bullet entity " << bullet << " and asteroid entity " << asteroid << std::endl;
                 bool bullet_in_killqueue = false;
+                bool asteroid_in_killqueue = false;
 
                 if (std::find(entities_to_kill.begin(), entities_to_kill.end(), bullet) == entities_to_kill.end()){
-                    bullet_in_killqueue = true;
-                }
-
-                if (bullet_in_killqueue) {
                     entities_to_kill.push_back(bullet);
                 }
-                entities_to_kill.push_back(asteroid);
+
+                if (std::find(entities_to_kill.begin(), entities_to_kill.end(), asteroid) == entities_to_kill.end()){
+                    entities_to_kill.push_back(asteroid);
+                }
+                
                 
             }
         }
@@ -292,13 +293,14 @@ void SpawnSystem::createAsteroid(Registry& reg, float vx, float vy, sf::Vector2f
 
 
 void SpawnSystem::manageAsteroids(Registry& reg, sf::RenderWindow& window, Game& game, uint32_t maxAsteroids) {
-    std::unordered_map<Entity, AsteroidTag> asteroids = reg.getComponent<AsteroidTag>();
+    std::unordered_map<Entity, AsteroidTag>& asteroids = reg.getComponent<AsteroidTag>();
 
-    //std::cout << "number of asteroids alive: " << asteroids.size() << std::endl;
+    std::cout << "number of asteroids alive: " << asteroids.size() << std::endl;
 
     if (asteroids.size() < maxAsteroids) {
-        game.createAsteroid();
+        this->createAsteroid(reg, 20.f, 400.f, {400, 400});
     }
+
 }
 
 
