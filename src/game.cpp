@@ -15,9 +15,10 @@ void Game::update(sf::RenderWindow& window) {
     //shootingSystem.update(registry, *this, dt);
     shootingSystem.update(registry, *this, dt);
     
+    spawnSystem.manageAsteroids(registry, window, *this, 10);
     collisionSystem.update_hitbox(registry);
     collisionSystem.update_bulletcollisions(registry);
-    spawnSystem.manageAsteroids(registry, window, *this, 10);
+    
     
     transformSystem.update(registry, dt);
     spriteSystem.update(registry);
@@ -30,7 +31,7 @@ void Game::render(sf::RenderWindow& window) {
     window.display();
 }
 
-void Game::destroy(Entity entity) {
+void Game::destroy(Entity& entity) {
     // Clean up resources if needed
     registry.destroy(entity);
 }
@@ -43,8 +44,8 @@ void Game::createPlayer() {
     spawnSystem.createPlayer(registry);
 }
 
-void Game::createAsteroid() {
-    spawnSystem.createAsteroid(registry, 20.f, 400.f, {400, 400});
+void Game::createAsteroid(float vx, float vy, sf::Vector2f position) {
+    spawnSystem.createAsteroid(registry, vx, vy, position);
 }
 
 void Game::createCursor() {

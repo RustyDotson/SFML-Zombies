@@ -5,6 +5,9 @@
 #include "../game.hpp"
 #include <math.h>
 #include <iostream>
+#include <algorithm>
+#include <vector>
+#include <random>
 
 ////////////////////////////////////////////////////////////////////////////////////
 //SPRITE SYSTEMS
@@ -277,13 +280,13 @@ void SpawnSystem::createAsteroid(Registry& reg, float vx, float vy, sf::Vector2f
     sf::Texture asteroid_texture = sf::Texture("media/sprites/asteroid_large.png", false, sf::IntRect());
 
     Entity asteroid = reg.create();
-    reg.getComponent<Transform>()[asteroid] = Transform{sf::degrees(0.0f), 10.f, 10.f, sf::Vector2f(400.f, 400.f), 200.f, 200.f, 64.f, 64.f};
+    reg.getComponent<Transform>()[asteroid] = Transform{sf::degrees(0.0f), vx, vy, position, 200.f, 200.f, 64.f, 64.f};
     reg.getComponent<Sprite>()[asteroid] = Sprite{.texture = asteroid_texture};
     reg.getComponent<AsteroidTag>()[asteroid] = AsteroidTag{0, 100.f};
 
     reg.getComponent<Sprite>()[asteroid].sprite.setScale({2.f, 2.f});
 
-    reg.getComponent<CollisionBox>()[asteroid].collision_shape.setPosition(sf::Vector2f(400.f, 400.f));
+    reg.getComponent<CollisionBox>()[asteroid].collision_shape.setPosition(position);
     reg.getComponent<CollisionBox>()[asteroid].collision_shape.setRadius(reg.getComponent<Transform>()[asteroid].size_x / 2.f); // Set radius to match the size of the asteroid sprite
     reg.getComponent<CollisionBox>()[asteroid].collision_shape.setFillColor(sf::Color::Transparent);
     reg.getComponent<CollisionBox>()[asteroid].collision_shape.setOutlineColor(sf::Color::Green);
@@ -294,11 +297,27 @@ void SpawnSystem::createAsteroid(Registry& reg, float vx, float vy, sf::Vector2f
 
 void SpawnSystem::manageAsteroids(Registry& reg, sf::RenderWindow& window, Game& game, uint32_t maxAsteroids) {
     std::unordered_map<Entity, AsteroidTag>& asteroids = reg.getComponent<AsteroidTag>();
+    //std::cout << "number of asteroids alive: " << asteroids.size() << std::endl;
+    sf::Vector2u window_size = window.getSize();
 
-    std::cout << "number of asteroids alive: " << asteroids.size() << std::endl;
+    static std::mt19937 rng(std::random_device{}());
+    std::uniform_int_distribution<int> sides(0, 3);
+    std::uniform_real_distribution<float> x_coord(0.f, static_cast<float>(window_size.x));
+    std::uniform_real_distribution<float> y_coord(0.f, static_cast<float>(window_size.y));
+
+    int nsew = sides(rng); // 0 = north, 1 = south, 2 = east, 3 = west
+    float asteroid_x = x_coord(rng);
+    float asteroid_y = y_coord(rng);
 
     if (asteroids.size() < maxAsteroids) {
-        this->createAsteroid(reg, 20.f, 400.f, {400, 400});
+        switch (nsew) {
+            case 0: asteroid_y = 0.f; break; // North
+            case 1: asteroid_y = static_cast<float>(window_size.y); break; // South
+            case 2: asteroid_x = static_cast<float>(window_size.x); break; // East
+            case 3: asteroid_x = 0.f; break; // West
+        }
+
+        game.createAsteroid(0.f, 0.f, {asteroid_x, asteroid_y});
     }
 
 }

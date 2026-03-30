@@ -12,14 +12,12 @@ int main(){
     sf::ContextSettings settings;
     settings.antiAliasingLevel = 8;
 
-    unsigned int windowSize = 800;
-    sf::RenderWindow window(sf::VideoMode({windowSize, windowSize}), "Asteroids!", sf::Style::Default, sf::State::Windowed, settings);
-
-    
+    sf::VideoMode desktop = sf::VideoMode::getDesktopMode();
+    sf::Vector2u windowSize = {static_cast<unsigned int>(desktop.size.x * 0.9), static_cast<unsigned int>(desktop.size.y * 0.9)};
+    sf::RenderWindow window(sf::VideoMode(windowSize), "Asteroids!", sf::Style::Default, sf::State::Windowed, settings);
 
     Game game;
     game.createPlayer();
-    game.createAsteroid();
     game.createCursor();
 
 
