@@ -22,7 +22,7 @@ FetchContent_MakeAvailable(SFML)
 
 set(CMAKE_CXX_STANDARD 23)
 
-add_executable(main src/main.cpp src/game.hpp src/game.cpp src/ecs_simple/Entity.hpp src/ecs_simple/Components.hpp src/ecs_simple/Registry.hpp src/ecs_simple/Registry.cpp src/ecs_simple/Systems.hpp src/ecs_simple/Systems.cpp)
+add_executable(main src/main.cpp src/game.hpp src/game.cpp src/ecs_simple/Entity.hpp src/ecs_simple/Components.hpp src/ecs_simple/Registry.hpp src/ecs_simple/Registry.cpp src/ecs_simple/Systems.hpp src/ecs_simple/Systems.cpp src/ecs_simple/utils/helpers.hpp src/ecs_simple/utils/helpers.cpp)
 target_compile_features(main PRIVATE cxx_std_23)
 target_link_libraries(main PRIVATE SFML::Graphics SFML::Window SFML::Audio)
 

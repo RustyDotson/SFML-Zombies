@@ -8,6 +8,7 @@
 #include <algorithm>
 #include <vector>
 #include <random>
+#include "utils/helpers.hpp"
 
 ////////////////////////////////////////////////////////////////////////////////////
 //SPRITE SYSTEMS
@@ -141,10 +142,10 @@ void TransformSystem::update(Registry& reg, float dt) {
 }
 
 ////////////////////////////////////////////////////////////////////////////////////
-//INPUT SYSTEMS
+//MOVEMENT SYSTEMS
 ////////////////////////////////////////////////////////////////////////////////////
 
-void MovementSystem::update(Registry& reg, float dt) {
+void MovementSystem::update_player(Registry& reg, float dt) {
         std::unordered_map<Entity, Input>& inputs = reg.getComponent<Input>();
         std::unordered_map<Entity, Transform>& transforms = reg.getComponent<Transform>();
 
@@ -177,6 +178,9 @@ void MovementSystem::update(Registry& reg, float dt) {
         }
 }
 
+////////////////////////////////////////////////////////////////////////////////////
+//INPUT SYSTEMS
+////////////////////////////////////////////////////////////////////////////////////
 
 void AimSystem::update(Registry& reg, float dt) {
         std::unordered_map<Entity, Input>& inputs = reg.getComponent<Input>();
@@ -297,27 +301,18 @@ void SpawnSystem::createAsteroid(Registry& reg, float vx, float vy, sf::Vector2f
 
 void SpawnSystem::manageAsteroids(Registry& reg, sf::RenderWindow& window, Game& game, uint32_t maxAsteroids) {
     std::unordered_map<Entity, AsteroidTag>& asteroids = reg.getComponent<AsteroidTag>();
-    //std::cout << "number of asteroids alive: " << asteroids.size() << std::endl;
-    sf::Vector2u window_size = window.getSize();
-
-    static std::mt19937 rng(std::random_device{}());
-    std::uniform_int_distribution<int> sides(0, 3);
-    std::uniform_real_distribution<float> x_coord(0.f, static_cast<float>(window_size.x));
-    std::uniform_real_distribution<float> y_coord(0.f, static_cast<float>(window_size.y));
-
-    int nsew = sides(rng); // 0 = north, 1 = south, 2 = east, 3 = west
-    float asteroid_x = x_coord(rng);
-    float asteroid_y = y_coord(rng);
+    
 
     if (asteroids.size() < maxAsteroids) {
-        switch (nsew) {
-            case 0: asteroid_y = 0.f; break; // North
-            case 1: asteroid_y = static_cast<float>(window_size.y); break; // South
-            case 2: asteroid_x = static_cast<float>(window_size.x); break; // East
-            case 3: asteroid_x = 0.f; break; // West
-        }
-
-        game.createAsteroid(0.f, 0.f, {asteroid_x, asteroid_y});
+        sf::Vector2u window_size = window.getSize();
+        sf::Vector2f spawn_coords = utils::rand_bord_coord(window_size);
+        sf::Vector2f direction_to_center = sf::Vector2f(window_size.x/2, window_size.y/2) - spawn_coords;
+        float angle_to_center = atan2(direction_to_center.y, direction_to_center.x);
+        float speed = 100.f; // Adjust this value for faster/slower asteroids
+        float vx = cos(angle_to_center) * speed;
+        float vy = sin(angle_to_center) * speed;
+        
+        this->createAsteroid(reg, vx, vy, spawn_coords);
     }
 
 }

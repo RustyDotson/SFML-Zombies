@@ -9,7 +9,7 @@
  
 void Game::update(sf::RenderWindow& window) {
     inputSystem.update(registry, window);
-    movementSystem.update(registry, dt);
+    movementSystem.update_player(registry, dt);
     
     aimSystem.update(registry, dt);
     //shootingSystem.update(registry, *this, dt);
@@ -27,7 +27,7 @@ void Game::update(sf::RenderWindow& window) {
 void Game::render(sf::RenderWindow& window) {
     window.clear();
     spriteSystem.render(registry, window);
-    collisionSystem.render(registry, window);
+    //collisionSystem.render(registry, window);
     window.display();
 }
 

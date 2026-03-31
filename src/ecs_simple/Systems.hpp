@@ -21,7 +21,7 @@ struct TransformSystem {
 
 
 struct MovementSystem {
-    void update(Registry& reg, float dt);
+    void update_player(Registry& reg, float dt);
 };
 
 
