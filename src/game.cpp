@@ -15,7 +15,7 @@ void Game::update(sf::RenderWindow& window) {
     //shootingSystem.update(registry, *this, dt);
     shootingSystem.update(registry, *this, dt);
     
-    spawnSystem.manageAsteroids(registry, window, *this, 10);
+    spawnSystem.manageAsteroids(registry, window, *this, 2000);
     collisionSystem.update_hitbox(registry);
     collisionSystem.update_bulletcollisions(registry);
     
