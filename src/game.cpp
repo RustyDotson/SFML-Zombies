@@ -8,14 +8,15 @@
 
  
 void Game::update(sf::RenderWindow& window) {
+    static uint32_t asteroids_this_round = 0;
+
     inputSystem.update(registry, window);
     movementSystem.update_player(registry, dt);
     
     aimSystem.update(registry, dt);
-    //shootingSystem.update(registry, *this, dt);
     shootingSystem.update(registry, *this, dt);
     
-    spawnSystem.manageAsteroids(registry, window, *this, 500);
+    spawnSystem.manageAsteroids(registry, window, *this, asteroids_this_round);
     collisionSystem.update_hitbox(registry);
     collisionSystem.update_bulletcollisions(registry);
     
@@ -54,6 +55,14 @@ void Game::createCursor() {
 
 void Game::createBullet(sf::Angle angle, float vx, float vy, sf::Vector2f position) {
     spawnSystem.createBullet(registry, angle, vx, vy, position);
+}
+
+bool Game::isRoundOver() {
+    return round_over;
+}
+
+void Game::setRoundOver(bool value) {
+    round_over = value;
 }
 
 Registry& Game::getRegistry() {

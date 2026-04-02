@@ -299,7 +299,7 @@ void SpawnSystem::createAsteroid(Registry& reg, float vx, float vy, sf::Vector2f
 }
 
 
-void SpawnSystem::manageAsteroids(Registry& reg, sf::RenderWindow& window, Game& game, uint32_t maxAsteroids) {
+void SpawnSystem::manageAsteroids(Registry& reg, sf::RenderWindow& window, Game& game, uint32_t& maxAsteroids) {
     std::unordered_map<Entity, AsteroidTag>& asteroids = reg.getComponent<AsteroidTag>();
     sf::Vector2u window_size = window.getSize();
     sf::Vector2f spawn_coords = utils::rand_bord_spawn_coord(window_size, 64.f);
@@ -313,24 +313,32 @@ void SpawnSystem::manageAsteroids(Registry& reg, sf::RenderWindow& window, Game&
     float vx = cos(angle_to_center) * speed;
     float vy = sin(angle_to_center) * speed;
 
-    while (asteroids.size() < maxAsteroids) {
-        
-        spawn_coords = utils::rand_bord_spawn_coord(window_size, 64.f);
-        direction_to_center = sf::Vector2f(window_size.x/2, window_size.y/2) - spawn_coords;
+    if (game.isRoundOver()) {
+        while (asteroids.size() < maxAsteroids) {
+            
+            spawn_coords = utils::rand_bord_spawn_coord(window_size, 64.f);
+            direction_to_center = sf::Vector2f(window_size.x/2, window_size.y/2) - spawn_coords;
 
-        angle_to_center = atan2(direction_to_center.y, direction_to_center.x);
-        angle_degrees = angle_to_center * 180 / 3.14159f; // Convert to degrees
-        random_offset = utils::rand_float(-30.f, 30.f); // Random offset in degrees
-        
-        angle_degrees += random_offset; // Add random offset to the angle
-        angle_to_center = angle_degrees * 3.14159f / 180; // Convert back to radians
+            angle_to_center = atan2(direction_to_center.y, direction_to_center.x);
+            angle_degrees = angle_to_center * 180 / 3.14159f; // Convert to degrees
+            random_offset = utils::rand_float(-30.f, 30.f); // Random offset in degrees
+            
+            angle_degrees += random_offset; // Add random offset to the angle
+            angle_to_center = angle_degrees * 3.14159f / 180; // Convert back to radians
 
-        vx = cos(angle_to_center) * speed;
-        vy = sin(angle_to_center) * speed;
+            vx = cos(angle_to_center) * speed;
+            vy = sin(angle_to_center) * speed;
 
-        
-        
-        this->createAsteroid(reg, vx, vy, spawn_coords);
+            
+            
+            this->createAsteroid(reg, vx, vy, spawn_coords);
+        }
+        game.setRoundOver(false);
+    }
+
+    if (asteroids.empty()) {
+        game.setRoundOver(true);
+        maxAsteroids = (maxAsteroids + 1) * 2; // Increase the number of asteroids for the next round
     }
 
 }
