@@ -302,7 +302,7 @@ void SpawnSystem::createAsteroid(Registry& reg, float vx, float vy, sf::Vector2f
 void SpawnSystem::manageAsteroids(Registry& reg, sf::RenderWindow& window, Game& game, uint32_t maxAsteroids) {
     std::unordered_map<Entity, AsteroidTag>& asteroids = reg.getComponent<AsteroidTag>();
     sf::Vector2u window_size = window.getSize();
-    sf::Vector2f spawn_coords = utils::rand_bord_coord(window_size);
+    sf::Vector2f spawn_coords = utils::rand_bord_spawn_coord(window_size, 64.f);
     sf::Vector2f direction_to_center = sf::Vector2f(window_size.x/2, window_size.y/2) - spawn_coords;
 
     float angle_to_center = atan2(direction_to_center.y, direction_to_center.x);
@@ -315,7 +315,7 @@ void SpawnSystem::manageAsteroids(Registry& reg, sf::RenderWindow& window, Game&
 
     while (asteroids.size() < maxAsteroids) {
         
-        spawn_coords = utils::rand_bord_coord(window_size);
+        spawn_coords = utils::rand_bord_spawn_coord(window_size, 64.f);
         direction_to_center = sf::Vector2f(window_size.x/2, window_size.y/2) - spawn_coords;
 
         angle_to_center = atan2(direction_to_center.y, direction_to_center.x);
