@@ -141,6 +141,29 @@ void TransformSystem::update(Registry& reg, float dt) {
         }
 }
 
+
+void TransformSystem::asteroidScreenWrap(Registry& reg, sf::Vector2u window_size) {
+    std::unordered_map<Entity, Transform>& transforms = reg.getComponent<Transform>();
+    std::unordered_map<Entity, AsteroidTag>& asteroidTags = reg.getComponent<AsteroidTag>();
+
+    for (int e = 1; e <= reg.maxEntity(); e++) {
+        if (transforms.contains(e) && asteroidTags.contains(e)) {
+            if (transforms[e].position.x < 0) {
+                transforms[e].position.x = static_cast<float>(window_size.x);
+            } else if (transforms[e].position.x > window_size.x) {
+                transforms[e].position.x = 0.f;
+            }
+
+            if (transforms[e].position.y < 0) {
+                transforms[e].position.y = static_cast<float>(window_size.y);
+            } else if (transforms[e].position.y > window_size.y) {
+                transforms[e].position.y = 0.f;
+            }
+        }
+    }
+}
+
+
 ////////////////////////////////////////////////////////////////////////////////////
 //MOVEMENT SYSTEMS
 ////////////////////////////////////////////////////////////////////////////////////
@@ -299,51 +322,6 @@ void SpawnSystem::createAsteroid(Registry& reg, float vx, float vy, sf::Vector2f
 }
 
 
-void SpawnSystem::manageAsteroids(Registry& reg, sf::RenderWindow& window, Game& game, uint32_t& maxAsteroids) {
-    std::unordered_map<Entity, AsteroidTag>& asteroids = reg.getComponent<AsteroidTag>();
-    sf::Vector2u window_size = window.getSize();
-    sf::Vector2f spawn_coords = utils::rand_bord_spawn_coord(window_size, 64.f);
-    sf::Vector2f direction_to_center = sf::Vector2f(window_size.x/2, window_size.y/2) - spawn_coords;
-
-    float angle_to_center = atan2(direction_to_center.y, direction_to_center.x);
-    float angle_degrees = angle_to_center * 180 / 3.14159f; // Convert to degrees
-    float random_offset = utils::rand_float(-30.f, 30.f); // Random offset in degrees
-
-    float speed = 100.f;
-    float vx = cos(angle_to_center) * speed;
-    float vy = sin(angle_to_center) * speed;
-
-    if (game.isRoundOver()) {
-        while (asteroids.size() < maxAsteroids) {
-            
-            spawn_coords = utils::rand_bord_spawn_coord(window_size, 64.f);
-            direction_to_center = sf::Vector2f(window_size.x/2, window_size.y/2) - spawn_coords;
-
-            angle_to_center = atan2(direction_to_center.y, direction_to_center.x);
-            angle_degrees = angle_to_center * 180 / 3.14159f; // Convert to degrees
-            random_offset = utils::rand_float(-30.f, 30.f); // Random offset in degrees
-            
-            angle_degrees += random_offset; // Add random offset to the angle
-            angle_to_center = angle_degrees * 3.14159f / 180; // Convert back to radians
-
-            vx = cos(angle_to_center) * speed;
-            vy = sin(angle_to_center) * speed;
-
-            
-            
-            this->createAsteroid(reg, vx, vy, spawn_coords);
-        }
-        game.setRoundOver(false);
-    }
-
-    if (asteroids.empty()) {
-        game.setRoundOver(true);
-        maxAsteroids = (maxAsteroids + 1) * 2; // Increase the number of asteroids for the next round
-    }
-
-}
-
-
 void SpawnSystem::createCursor(Registry& reg) {
     Entity cursor = reg.create();
     reg.getComponent<CursorTag>()[cursor] = CursorTag{sf::Mouse::getPosition()};
@@ -366,4 +344,42 @@ void SpawnSystem::createBullet(Registry& reg, sf::Angle angle, float vx, float v
         reg.getComponent<CollisionBox>()[bullet].collision_shape.setFillColor(sf::Color::Transparent);
         reg.getComponent<CollisionBox>()[bullet].collision_shape.setOutlineColor(sf::Color::Blue);
         reg.getComponent<CollisionBox>()[bullet].collision_shape.setOutlineThickness(2.f);
+}
+
+
+////////////////////////////////////////////////////////////////////////////////////
+//ROUND SYSTEMS
+////////////////////////////////////////////////////////////////////////////////////
+
+void RoundSystem::newRound(Registry& reg, sf::RenderWindow& window, Game& game, uint32_t& maxAsteroids) {
+    std::unordered_map<Entity, AsteroidTag>& asteroids = reg.getComponent<AsteroidTag>();
+
+    if (game.isRoundOver()) {
+
+        sf::Vector2u window_size = window.getSize();
+        sf::Vector2f spawn_coords = utils::randBordSpawnCoord(window_size, 64.f);
+        sf::Vector2f direction_to_center = sf::Vector2f(window_size.x/2, window_size.y/2) - spawn_coords;
+        float angle_to_center = atan2(direction_to_center.y, direction_to_center.x);
+        float angle_degrees = angle_to_center * 180 / 3.14159f; // Convert to degrees
+        float random_offset = utils::randFloat(-30.f, 30.f); // Random offset in degrees
+
+        float speed = 100.f;
+        float vx = cos(angle_to_center) * speed;
+        float vy = sin(angle_to_center) * speed;
+        while (asteroids.size() < maxAsteroids) {
+            
+            spawn_coords = utils::randBordSpawnCoord(window_size, 64.f);
+            utils::AsteroidSpawnParams spawnParams = utils::calculateAsteroidSpawnParams(spawn_coords, window_size, speed);
+
+            game.createAsteroid(spawnParams.vx, spawnParams.vy, spawn_coords);
+        }
+        game.setRoundOver(false);
+
+    }
+
+    if (asteroids.empty()) {
+        game.setRoundOver(true);
+        maxAsteroids = (maxAsteroids * 2) + 1; // Increase the number of asteroids for the next round
+    }
+
 }

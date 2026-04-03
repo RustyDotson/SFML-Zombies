@@ -16,12 +16,14 @@ void Game::update(sf::RenderWindow& window) {
     aimSystem.update(registry, dt);
     shootingSystem.update(registry, *this, dt);
     
-    spawnSystem.manageAsteroids(registry, window, *this, asteroids_this_round);
+    //spawnSystem.newRound(registry, window, *this, asteroids_this_round);
+    roundSystem.newRound(registry, window, *this, asteroids_this_round);
     collisionSystem.update_hitbox(registry);
     collisionSystem.update_bulletcollisions(registry);
     
     
     transformSystem.update(registry, dt);
+    transformSystem.asteroidScreenWrap(registry, window.getSize());
     spriteSystem.update(registry);
 }
 

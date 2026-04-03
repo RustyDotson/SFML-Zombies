@@ -17,6 +17,7 @@ struct CollisionSystem{
 
 struct TransformSystem {
     void update(Registry& reg, float dt);
+    void asteroidScreenWrap(Registry& reg, sf::Vector2u window_size);
 };
 
 
@@ -42,11 +43,15 @@ struct InputSystem {
 struct SpawnSystem {
     void createPlayer(Registry& reg);
     void createAsteroid(Registry& reg, float vx, float vy, sf::Vector2f position);
-    void manageAsteroids(Registry& reg, sf::RenderWindow& window, Game& game, uint32_t& maxAsteroids);
+    void newRound(Registry& reg, sf::RenderWindow& window, Game& game, uint32_t& maxAsteroids);
     void createCursor(Registry& reg);
     void createBullet(Registry& reg, sf::Angle angle, float vx, float vy, sf::Vector2f position);
 };
 
 struct SoundSystem {
     void playSound(const std::string& soundFile);
+};
+
+struct RoundSystem {
+    void newRound(Registry& reg, sf::RenderWindow& window, Game& game, uint32_t& maxAsteroids);
 };
