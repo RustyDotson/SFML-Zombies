@@ -5,7 +5,6 @@
 #include "Components.hpp"
 #include "Registry.hpp"
 
-
 Entity Registry::create() {
     std::cout << "Creating entity: " << max_entity + 1 << std::endl;
     if (!recycled_ids.empty()){
@@ -18,16 +17,16 @@ Entity Registry::create() {
 }
 
 void Registry::destroy(Entity entity) {
-            recycled_ids.push_back(entity);
-            sprites.erase(entity);
-            collision_boxes.erase(entity);
-            transforms.erase(entity);
-            inputs.erase(entity);
-            players.erase(entity);
-            cursors.erase(entity);
-            bullets.erase(entity);
-            asteroids.erase(entity);
-        }
+    recycled_ids.push_back(entity);
+    sprites.erase(entity);
+    collision_boxes.erase(entity);
+    transforms.erase(entity);
+    inputs.erase(entity);
+    players.erase(entity);
+    cursors.erase(entity);
+    bullets.erase(entity);
+    asteroids.erase(entity);
+}
 
 Entity Registry::maxEntity(){
     return max_entity;

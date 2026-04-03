@@ -4,7 +4,7 @@
 
 namespace utils {
 
-    sf::Vector2f rand_bord_coord(sf::Vector2u& window_size) { //returns random border coordinates
+    sf::Vector2f rand_bord_spawn_coord(sf::Vector2u& window_size, float border_offset) { //returns random border coordinates
 
         static std::mt19937 rng(std::random_device{}());
         std::uniform_int_distribution<int> sides(0, 3);
@@ -17,17 +17,22 @@ namespace utils {
 
         switch (nsew) {
             case 0: 
-                asteroid_y = 0.f; break; // North
+                asteroid_y = 0.f - border_offset; break; // North
             case 1: 
-                asteroid_y = static_cast<float>(window_size.y); break; // South
+                asteroid_y = static_cast<float>(window_size.y) + border_offset; break; // South
             case 2: 
-                asteroid_x = static_cast<float>(window_size.x); break; // East
+                asteroid_x = static_cast<float>(window_size.x) + border_offset; break; // East
             case 3: 
-                asteroid_x = 0.f; break; // West
+                asteroid_x = 0.f - border_offset; break; // West
         }
         
         return sf::Vector2f(asteroid_x, asteroid_y);
 
     }
 
+    float rand_float(float min, float max) {
+        static std::mt19937 rng(std::random_device{}());
+        std::uniform_real_distribution<float> dist(min, max);
+        return dist(rng);
+    }
 }

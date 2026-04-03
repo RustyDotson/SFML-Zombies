@@ -23,10 +23,16 @@ public:
 
     void createBullet(sf::Angle angle, float vx, float vy, sf::Vector2f position);
 
+    bool isRoundOver();
+
+    void setRoundOver(bool value);
+
     Registry& getRegistry();
 
 private:
     float dt = 0.f;
+    bool round_over = true;
+
     Registry registry;
 
     SpriteSystem spriteSystem;
