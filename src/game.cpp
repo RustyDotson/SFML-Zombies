@@ -20,6 +20,7 @@ void Game::update(sf::RenderWindow& window) {
     roundSystem.newRound(registry, window, *this, asteroids_this_round);
     collisionSystem.update_hitbox(registry);
     collisionSystem.update_bulletcollisions(registry, *this);
+    collisionSystem.update_playercollisions(registry, *this);
     
     
     transformSystem.update(registry, dt);
@@ -35,7 +36,7 @@ void Game::render(sf::RenderWindow& window) {
     window.display();
 }
 
-void Game::destroy(Entity& entity) {
+void Game::destroy(Entity entity) {
     // Clean up resources if needed
     registry.destroy(entity);
 }

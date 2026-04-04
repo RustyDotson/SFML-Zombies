@@ -11,6 +11,7 @@ struct SpriteSystem{
 struct CollisionSystem{
     void update_hitbox(Registry& reg);
     void update_bulletcollisions(Registry& reg, Game& game);
+    void update_playercollisions(Registry& reg, Game& game);
     void render(Registry& reg, sf::RenderWindow& window);
 };
 

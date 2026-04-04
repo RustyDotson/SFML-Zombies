@@ -36,6 +36,24 @@ namespace utils {
         return dist(rng);
     }
 
+
+    bool collisionCheck(sf::CircleShape cb1, sf::CircleShape cb2) {
+        bool is_collision = false;
+        sf::Vector2f cb1_coords = cb1.getPosition();
+        sf::Vector2f cb2_coords = cb2.getPosition();
+
+        float dx = cb1_coords.x - cb2_coords.x;
+        float dy = cb1_coords.y - cb2_coords.y;
+
+        float radius_total = cb1.getRadius() + cb2.getRadius();
+        float distance = sqrt(pow(dx, 2) + pow(dy, 2));
+
+        if (distance <= radius_total) {
+            is_collision = true;
+        }
+        return is_collision;
+    }
+
     AsteroidSpawnParams calculateAsteroidSpawnParams(sf::Vector2f spawn_coords, sf::Vector2u window_size, float speed) {
         sf::Vector2f direction_to_center = sf::Vector2f(window_size.x/2, window_size.y/2) - spawn_coords;
         float angle_to_center = atan2(direction_to_center.y, direction_to_center.x);

@@ -65,6 +65,31 @@ void CollisionSystem::update_hitbox(Registry& reg) {
 }
 
 
+void CollisionSystem::update_playercollisions(Registry& reg, Game& game) {
+    // This function can be implemented to check for collisions between the player and asteroids, and handle player damage/lives accordingly.
+    // Similar to update_bulletcollisions, but checks for collisions between player entities and asteroid entities.
+    std::unordered_map<Entity, CollisionBox>& collision_boxes = reg.getComponent<CollisionBox>();
+    std::unordered_map<Entity, AsteroidTag>& asteroidTags = reg.getComponent<AsteroidTag>();
+    std::unordered_map<Entity, PlayerTag>& playerTags = reg.getComponent<PlayerTag>();
+
+    std::vector<Entity> kill_buffer;
+
+    for (const auto [player_entity, player] : playerTags) {
+        sf::CircleShape player_hitbox = collision_boxes[player_entity].collision_shape;
+        for (const auto [asteroid_entity, asteroid] : asteroidTags) {
+            sf::CircleShape asteroid_hitbox = collision_boxes[asteroid_entity].collision_shape;
+
+            if (utils::collisionCheck(player_hitbox, asteroid_hitbox)) {
+                kill_buffer.push_back(player_entity);
+            }
+        }
+    }
+
+    for (Entity e : kill_buffer){
+        game.destroy(e);
+    }
+}
+
 void CollisionSystem::update_bulletcollisions(Registry& reg, Game& game) {
     std::unordered_map<Entity, CollisionBox>& collision_boxes = reg.getComponent<CollisionBox>();
     std::unordered_map<Entity, BulletTag>& bulletTags = reg.getComponent<BulletTag>();
@@ -78,15 +103,8 @@ void CollisionSystem::update_bulletcollisions(Registry& reg, Game& game) {
         for (const auto& [asteroid, _] : asteroidTags) {
             //std::cout << "checking asteroid: " << asteroid << std::endl;
             sf::CircleShape asteroid_hitbox = collision_boxes[asteroid].collision_shape;
-            sf::Vector2f asteroid_coords = asteroid_hitbox.getPosition();
-            sf::Vector2f bullet_coords = bullet_hitbox.getPosition();
-
-            float dx = asteroid_coords.x - bullet_coords.x;
-            float dy = asteroid_coords.y - bullet_coords.y;
-
-            float distance = sqrt(pow(dx, 2) + pow(dy, 2));
-
-            if (distance < asteroid_hitbox.getRadius() + bullet_hitbox.getRadius()){
+            
+            if (utils::collisionCheck(asteroid_hitbox, bullet_hitbox)){
                 std::cout << "collision happening between bullet entity " << bullet << " and asteroid entity " << asteroid << std::endl;
                 bool bullet_in_killqueue = false;
                 bool asteroid_in_killqueue = false;
@@ -244,8 +262,8 @@ void ShootingSystem::update(Registry& reg, Game& game, float dt) {
                     playerTags[e].timeSinceLastShot += dt;
                     if (playerTags[e].timeSinceLastShot >= playerTags[e].fireRate) {
                         playerTags[e].timeSinceLastShot = 0.f; // Reset the timer
-                        float velocity_x = (cos(transforms[e].rotation.asRadians()) * 500.f) + transforms[e].velocity_x; // Adjust bullet speed x
-                        float velocity_y = (sin(transforms[e].rotation.asRadians()) * 500.f) + transforms[e].velocity_y; // Adjust bullet speed y
+                        float velocity_x = (cos(transforms[e].rotation.asRadians()) * playerTags[e].bulletSpeed) + transforms[e].velocity_x; // Adjust bullet speed x
+                        float velocity_y = (sin(transforms[e].rotation.asRadians()) * playerTags[e].bulletSpeed) + transforms[e].velocity_y; // Adjust bullet speed y
                         game.createBullet(transforms[e].rotation, velocity_x, velocity_y, transforms[e].position);
                         //spawnSystem.createBullet(reg, transforms[e].rotation, velocity_x, velocity_y, transforms[e].position);
                     } 
@@ -302,7 +320,7 @@ void SpawnSystem::createPlayer(Registry& reg) {
     reg.getComponent<Transform>()[player] = Transform{sf::degrees(0.0f), 0.f, 0.f, sf::Vector2f(400.f, 400.f), 200.f, 200.f, 32.f, 32.f};
     reg.getComponent<Sprite>()[player] = Sprite{};
     reg.getComponent<Input>()[player] = Input{false, false, false, false, false, false, false};
-    reg.getComponent<PlayerTag>()[player] = PlayerTag{3};
+    reg.getComponent<PlayerTag>()[player] = PlayerTag{};
 
     reg.getComponent<Sprite>()[player].sprite.setScale({2.f, 2.f});
 
@@ -355,10 +373,11 @@ void SpawnSystem::createCursor(Registry& reg) {
 
 void SpawnSystem::createBullet(Registry& reg, sf::Angle angle, float vx, float vy, sf::Vector2f position) {
         Entity bullet = reg.create();
-        reg.getComponent<Transform>()[bullet] = Transform{angle, vx, vy, position, 5000.f, 800.f, 8.f, 8.f};
+        
         reg.getComponent<Sprite>()[bullet] = Sprite{};
         reg.getComponent<BulletTag>()[bullet] = BulletTag{};
         reg.getComponent<CollisionBox>()[bullet] = CollisionBox{};
+        reg.getComponent<Transform>()[bullet] = Transform{angle, vx, vy, position, 5000.f, 800.f, 8.f, 8.f};
 
         //std::unordered_map<Entity, Sprite>& sprite = reg.getComponent<Sprite>()[bullet];
         reg.getComponent<Sprite>()[bullet].texture.loadFromFile("media/sprites/bullet.png");
@@ -379,15 +398,15 @@ void SpawnSystem::asteroidSplit(Registry& reg, Entity asteroid) {
 
         if (tag.size == 0) { // Large asteroid
             for (int i = 0; i < 2; i++) {
-                float new_vx = transforms[asteroid].velocity_x + utils::randFloat(-50.f, 50.f);
-                float new_vy = transforms[asteroid].velocity_y + utils::randFloat(-50.f, 50.f);
+                float new_vx = transforms[asteroid].velocity_x + utils::randFloat(-100.f, 100.f);
+                float new_vy = transforms[asteroid].velocity_y + utils::randFloat(-100.f, 100.f);
                 sf::Vector2f new_position = transforms[asteroid].position + sf::Vector2f(utils::randFloat(-10.f, 10.f), utils::randFloat(-10.f, 10.f));
                 this->createAsteroid(reg, 1, new_vx, new_vy, new_position);
             }
         } else if (tag.size == 1) { // Medium asteroid
             for (int i = 0; i < 2; i++) {
-                float new_vx = transforms[asteroid].velocity_x + utils::randFloat(-50.f, 50.f);
-                float new_vy = transforms[asteroid].velocity_y + utils::randFloat(-50.f, 50.f);
+                float new_vx = transforms[asteroid].velocity_x + utils::randFloat(-100.f, 100.f);
+                float new_vy = transforms[asteroid].velocity_y + utils::randFloat(-100.f, 100.f);
                 sf::Vector2f new_position = transforms[asteroid].position + sf::Vector2f(utils::randFloat(-10.f, 10.f), utils::randFloat(-10.f, 10.f));
                 this->createAsteroid(reg, 2, new_vx, new_vy, new_position);
             }

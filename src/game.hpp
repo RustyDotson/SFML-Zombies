@@ -11,7 +11,7 @@ public:
 
     void render(sf::RenderWindow& window);
 
-    void destroy(Entity&  entity);
+    void destroy(Entity entity);
 
     void updateDeltaTime(float deltaTime);
 

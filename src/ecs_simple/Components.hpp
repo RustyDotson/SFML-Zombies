@@ -40,6 +40,7 @@ struct Lifetime {
 struct PlayerTag {
     uint32_t lives = 3;
     float fireRate = 0.1f;
+    float bulletSpeed = 3000.f;
     float timeSinceLastShot = 10.f;
     float speed = 200.f;
 };
