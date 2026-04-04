@@ -19,7 +19,9 @@ public:
 
     void createCursor();
 
-    void createAsteroid(float vx, float vy, sf::Vector2f position);
+    void createAsteroid(uint32_t size, float vx, float vy, sf::Vector2f position);
+
+    void asteroidSplit(Entity asteroid);
 
     void createBullet(sf::Angle angle, float vx, float vy, sf::Vector2f position);
 

@@ -65,7 +65,7 @@ void CollisionSystem::update_hitbox(Registry& reg) {
 }
 
 
-void CollisionSystem::update_bulletcollisions(Registry& reg) {
+void CollisionSystem::update_bulletcollisions(Registry& reg, Game& game) {
     std::unordered_map<Entity, CollisionBox>& collision_boxes = reg.getComponent<CollisionBox>();
     std::unordered_map<Entity, BulletTag>& bulletTags = reg.getComponent<BulletTag>();
     std::unordered_map<Entity, AsteroidTag>& asteroidTags = reg.getComponent<AsteroidTag>();
@@ -97,6 +97,7 @@ void CollisionSystem::update_bulletcollisions(Registry& reg) {
 
                 if (std::find(entities_to_kill.begin(), entities_to_kill.end(), asteroid) == entities_to_kill.end()){
                     entities_to_kill.push_back(asteroid);
+                    game.asteroidSplit(asteroid);
                 }
                 
                 
@@ -139,6 +140,15 @@ void TransformSystem::update(Registry& reg, float dt) {
                 transforms[e].position.y += transforms[e].velocity_y * dt;
             }
         }
+}
+
+void TransformSystem::asteroidRotation(Registry& reg, float dt) {
+    std::unordered_map<Entity, Transform>& transforms = reg.getComponent<Transform>();
+    std::unordered_map<Entity, AsteroidTag>& asteroidTags = reg.getComponent<AsteroidTag>();
+
+    for (auto& [asteroid, _] : asteroidTags) {
+        transforms[asteroid].rotation += sf::degrees(asteroidTags[asteroid].rotation_speed * dt);
+    }
 }
 
 
@@ -303,14 +313,29 @@ void SpawnSystem::createPlayer(Registry& reg) {
 }
 
 
-void SpawnSystem::createAsteroid(Registry& reg, float vx, float vy, sf::Vector2f position) {
-    sf::Texture asteroid_texture = sf::Texture("media/sprites/asteroid_large.png", false, sf::IntRect());
+void SpawnSystem::createAsteroid(Registry& reg, uint32_t size, float vx, float vy, sf::Vector2f position) {
+    
 
     Entity asteroid = reg.create();
-    reg.getComponent<Transform>()[asteroid] = Transform{sf::degrees(0.0f), vx, vy, position, 200.f, 200.f, 64.f, 64.f};
-    reg.getComponent<Sprite>()[asteroid] = Sprite{.texture = asteroid_texture};
-    reg.getComponent<AsteroidTag>()[asteroid] = AsteroidTag{0, 100.f};
 
+    float random_rotation_speed = utils::randFloat(-50.f, 50.f); // Random rotation speed between -50 and 50 degrees per second
+    std::cout << "Random rotation speed for asteroid: " << random_rotation_speed << " degrees/second" << std::endl;
+    reg.getComponent<AsteroidTag>()[asteroid] = AsteroidTag{size, 100.f, random_rotation_speed};
+    AsteroidTag& tag = reg.getComponent<AsteroidTag>()[asteroid];
+
+    reg.getComponent<Transform>()[asteroid] = Transform {
+        sf::degrees(0.0f), 
+        vx, 
+        vy, 
+        position, 
+        200.f, 
+        200.f, 
+        tag.size_to_pixels[tag.size], 
+        tag.size_to_pixels[tag.size]
+    };
+
+    sf::Texture asteroid_texture = sf::Texture(tag.size_to_texture[tag.size], false, sf::IntRect());
+    reg.getComponent<Sprite>()[asteroid] = Sprite{.texture = asteroid_texture};
     reg.getComponent<Sprite>()[asteroid].sprite.setScale({2.f, 2.f});
 
     reg.getComponent<CollisionBox>()[asteroid].collision_shape.setPosition(position);
@@ -347,6 +372,28 @@ void SpawnSystem::createBullet(Registry& reg, sf::Angle angle, float vx, float v
 }
 
 
+void SpawnSystem::asteroidSplit(Registry& reg, Entity asteroid) {
+    std::unordered_map<Entity, AsteroidTag>& asteroidTags = reg.getComponent<AsteroidTag>();
+    std::unordered_map<Entity, Transform>& transforms = reg.getComponent<Transform>();
+    const auto& tag = asteroidTags[asteroid];
+
+        if (tag.size == 0) { // Large asteroid
+            for (int i = 0; i < 2; i++) {
+                float new_vx = transforms[asteroid].velocity_x + utils::randFloat(-50.f, 50.f);
+                float new_vy = transforms[asteroid].velocity_y + utils::randFloat(-50.f, 50.f);
+                sf::Vector2f new_position = transforms[asteroid].position + sf::Vector2f(utils::randFloat(-10.f, 10.f), utils::randFloat(-10.f, 10.f));
+                this->createAsteroid(reg, 1, new_vx, new_vy, new_position);
+            }
+        } else if (tag.size == 1) { // Medium asteroid
+            for (int i = 0; i < 2; i++) {
+                float new_vx = transforms[asteroid].velocity_x + utils::randFloat(-50.f, 50.f);
+                float new_vy = transforms[asteroid].velocity_y + utils::randFloat(-50.f, 50.f);
+                sf::Vector2f new_position = transforms[asteroid].position + sf::Vector2f(utils::randFloat(-10.f, 10.f), utils::randFloat(-10.f, 10.f));
+                this->createAsteroid(reg, 2, new_vx, new_vy, new_position);
+            }
+        }
+}
+
 ////////////////////////////////////////////////////////////////////////////////////
 //ROUND SYSTEMS
 ////////////////////////////////////////////////////////////////////////////////////
@@ -371,7 +418,7 @@ void RoundSystem::newRound(Registry& reg, sf::RenderWindow& window, Game& game, 
             spawn_coords = utils::randBordSpawnCoord(window_size, 64.f);
             utils::AsteroidSpawnParams spawnParams = utils::calculateAsteroidSpawnParams(spawn_coords, window_size, speed);
 
-            game.createAsteroid(spawnParams.vx, spawnParams.vy, spawn_coords);
+            game.createAsteroid(0, spawnParams.vx, spawnParams.vy, spawn_coords);
         }
         game.setRoundOver(false);
 

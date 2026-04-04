@@ -19,11 +19,12 @@ void Game::update(sf::RenderWindow& window) {
     //spawnSystem.newRound(registry, window, *this, asteroids_this_round);
     roundSystem.newRound(registry, window, *this, asteroids_this_round);
     collisionSystem.update_hitbox(registry);
-    collisionSystem.update_bulletcollisions(registry);
+    collisionSystem.update_bulletcollisions(registry, *this);
     
     
     transformSystem.update(registry, dt);
     transformSystem.asteroidScreenWrap(registry, window.getSize());
+    transformSystem.asteroidRotation(registry, dt);
     spriteSystem.update(registry);
 }
 
@@ -47,8 +48,12 @@ void Game::createPlayer() {
     spawnSystem.createPlayer(registry);
 }
 
-void Game::createAsteroid(float vx, float vy, sf::Vector2f position) {
-    spawnSystem.createAsteroid(registry, vx, vy, position);
+void Game::createAsteroid(uint32_t size, float vx, float vy, sf::Vector2f position) {
+    spawnSystem.createAsteroid(registry, size, vx, vy, position);
+}
+
+void Game::asteroidSplit(Entity asteroid) {
+    spawnSystem.asteroidSplit(registry, asteroid);
 }
 
 void Game::createCursor() {
