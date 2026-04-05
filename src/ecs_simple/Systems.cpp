@@ -92,7 +92,8 @@ void CollisionSystem::update_bulletcollisions(Registry& reg) {
                 bool asteroid_in_killqueue = false;
 
                 if (std::find(entities_to_kill.begin(), entities_to_kill.end(), bullet) == entities_to_kill.end()){
-                    entities_to_kill.push_back(bullet);
+                    //entities_to_kill.push_back(bullet);
+                    continue;
                 }
 
                 if (std::find(entities_to_kill.begin(), entities_to_kill.end(), asteroid) == entities_to_kill.end()){
@@ -301,19 +302,21 @@ void SpawnSystem::createAsteroid(Registry& reg, float vx, float vy, sf::Vector2f
 
 void SpawnSystem::manageAsteroids(Registry& reg, sf::RenderWindow& window, Game& game, uint32_t& maxAsteroids) {
     std::unordered_map<Entity, AsteroidTag>& asteroids = reg.getComponent<AsteroidTag>();
-    sf::Vector2u window_size = window.getSize();
-    sf::Vector2f spawn_coords = utils::rand_bord_spawn_coord(window_size, 64.f);
-    sf::Vector2f direction_to_center = sf::Vector2f(window_size.x/2, window_size.y/2) - spawn_coords;
-
-    float angle_to_center = atan2(direction_to_center.y, direction_to_center.x);
-    float angle_degrees = angle_to_center * 180 / 3.14159f; // Convert to degrees
-    float random_offset = utils::rand_float(-30.f, 30.f); // Random offset in degrees
-
-    float speed = 100.f;
-    float vx = cos(angle_to_center) * speed;
-    float vy = sin(angle_to_center) * speed;
+    
 
     if (game.isRoundOver()) {
+        sf::Vector2u window_size = window.getSize();
+        sf::Vector2f spawn_coords = utils::rand_bord_spawn_coord(window_size, 64.f);
+        sf::Vector2f direction_to_center = sf::Vector2f(window_size.x/2, window_size.y/2) - spawn_coords;
+
+        float angle_to_center = atan2(direction_to_center.y, direction_to_center.x);
+        float angle_degrees = angle_to_center * 180 / 3.14159f; // Convert to degrees
+        float random_offset = utils::rand_float(-30.f, 30.f); // Random offset in degrees
+
+        float speed = 100.f;
+        float vx = cos(angle_to_center) * speed;
+        float vy = sin(angle_to_center) * speed;
+
         while (asteroids.size() < maxAsteroids) {
             
             spawn_coords = utils::rand_bord_spawn_coord(window_size, 64.f);
