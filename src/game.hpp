@@ -11,7 +11,7 @@ public:
 
     void render(sf::RenderWindow& window);
 
-    void destroy(Entity&  entity);
+    void destroy(Entity entity);
 
     void updateDeltaTime(float deltaTime);
 
@@ -19,7 +19,9 @@ public:
 
     void createCursor();
 
-    void createAsteroid(float vx, float vy, sf::Vector2f position);
+    void createAsteroid(uint32_t size, float vx, float vy, sf::Vector2f position);
+
+    void asteroidSplit(Entity asteroid);
 
     void createBullet(sf::Angle angle, float vx, float vy, sf::Vector2f position);
 
@@ -43,5 +45,6 @@ private:
     ShootingSystem shootingSystem;
     CollisionSystem collisionSystem;
     SpawnSystem spawnSystem;
+    RoundSystem roundSystem;
 
 };
