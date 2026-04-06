@@ -32,7 +32,7 @@ void Game::update(sf::RenderWindow& window) {
 void Game::render(sf::RenderWindow& window) {
     window.clear();
     spriteSystem.render(registry, window);
-    //collisionSystem.render(registry, window);
+    collisionSystem.render(registry, window);
     window.display();
 }
 

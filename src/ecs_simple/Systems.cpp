@@ -5,7 +5,6 @@
 #include "../game.hpp"
 #include <math.h>
 #include <iostream>
-#include <algorithm>
 #include <vector>
 #include <random>
 #include "utils/helpers.hpp"
@@ -110,8 +109,7 @@ void CollisionSystem::update_bulletcollisions(Registry& reg, Game& game) {
                 bool asteroid_in_killqueue = false;
 
                 if (std::find(entities_to_kill.begin(), entities_to_kill.end(), bullet) == entities_to_kill.end()){
-                    //entities_to_kill.push_back(bullet);
-                    continue;
+                    entities_to_kill.push_back(bullet);
                 }
 
                 if (std::find(entities_to_kill.begin(), entities_to_kill.end(), asteroid) == entities_to_kill.end()){
