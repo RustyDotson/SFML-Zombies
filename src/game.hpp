@@ -36,6 +36,8 @@ public:
 
     void playSound(const std::string& soundFile);
 
+    void randomSoundPitch(const std::string& soundFile);
+
     sf::SoundBuffer getSoundBuffer(const std::string& file);
 
     Registry& getRegistry();

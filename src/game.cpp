@@ -82,6 +82,10 @@ void Game::playSound(const std::string& soundFile) {
     soundManager.playSound(soundFile);
 }
 
+void Game::randomSoundPitch(const std::string& soundFile) {
+    soundManager.randomSoundPitch(soundFile);
+}
+
 sf::SoundBuffer Game::getSoundBuffer(const std::string& file) {
     return soundManager.sound_buffers.at(file);
 }

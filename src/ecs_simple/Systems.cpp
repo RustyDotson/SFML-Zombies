@@ -115,6 +115,7 @@ void CollisionSystem::update_bulletcollisions(Registry& reg, Game& game) {
                 if (std::find(entities_to_kill.begin(), entities_to_kill.end(), asteroid) == entities_to_kill.end()){
                     entities_to_kill.push_back(asteroid);
                     game.asteroidSplit(asteroid);
+                    game.randomSoundPitch("asteroid_explode");
                     game.playSound("asteroid_explode");
                 }
                 
@@ -389,6 +390,7 @@ void SpawnSystem::createBullet(Game& game, Registry& reg, sf::Angle angle, float
         reg.getComponent<CollisionBox>()[bullet].collision_shape.setOutlineColor(sf::Color::Blue);
         reg.getComponent<CollisionBox>()[bullet].collision_shape.setOutlineThickness(2.f);
 
+        game.randomSoundPitch("shoot");
         game.playSound("shoot");
 }
 
