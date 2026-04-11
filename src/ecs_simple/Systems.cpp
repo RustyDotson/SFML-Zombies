@@ -173,18 +173,18 @@ void TransformSystem::asteroidScreenWrap(Registry& reg, sf::Vector2u window_size
     std::unordered_map<Entity, Transform>& transforms = reg.getComponent<Transform>();
     std::unordered_map<Entity, AsteroidTag>& asteroidTags = reg.getComponent<AsteroidTag>();
 
-    for (int e = 1; e <= reg.maxEntity(); e++) {
-        if (transforms.contains(e) && asteroidTags.contains(e)) {
-            if (transforms[e].position.x < 0) {
-                transforms[e].position.x = static_cast<float>(window_size.x);
-            } else if (transforms[e].position.x > window_size.x) {
-                transforms[e].position.x = 0.f;
+    for (const auto& [asteroid, __] : asteroidTags) {
+        if (transforms.contains(asteroid) && asteroidTags.contains(asteroid)) {
+            if (transforms[asteroid].position.x < 0 - transforms[asteroid].size_x) {
+                transforms[asteroid].position.x = static_cast<float>(window_size.x) + transforms[asteroid].size_x;
+            } else if (transforms[asteroid].position.x > window_size.x + transforms[asteroid].size_x) {
+                transforms[asteroid].position.x = 0.f - transforms[asteroid].size_x;
             }
 
-            if (transforms[e].position.y < 0) {
-                transforms[e].position.y = static_cast<float>(window_size.y);
-            } else if (transforms[e].position.y > window_size.y) {
-                transforms[e].position.y = 0.f;
+            if (transforms[asteroid].position.y < 0 - transforms[asteroid].size_y) {
+                transforms[asteroid].position.y = static_cast<float>(window_size.y) + transforms[asteroid].size_y;
+            } else if (transforms[asteroid].position.y > window_size.y + transforms[asteroid].size_y) {
+                transforms[asteroid].position.y = 0.f - transforms[asteroid].size_y;
             }
         }
     }
