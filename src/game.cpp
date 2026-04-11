@@ -5,6 +5,7 @@
 #include <SFML/Graphics.hpp>
 #include <SFML/Audio.hpp>
 #include "game.hpp"
+#include <iostream>
 
  
 void Game::update(sf::RenderWindow& window) {
@@ -62,7 +63,7 @@ void Game::createCursor() {
 }
 
 void Game::createBullet(sf::Angle angle, float vx, float vy, sf::Vector2f position) {
-    spawnSystem.createBullet(registry, angle, vx, vy, position);
+    spawnSystem.createBullet(*this, registry, angle, vx, vy, position);
 }
 
 bool Game::isRoundOver() {
@@ -71,6 +72,16 @@ bool Game::isRoundOver() {
 
 void Game::setRoundOver(bool value) {
     round_over = value;
+}
+
+void Game::playSound(sf::SoundBuffer buffer) {
+    //sound.setBuffer(buffer);
+    //game_sound.setBuffer(buffer);
+    game_sound.play();
+}
+
+sf::SoundBuffer Game::getSoundBuffer(const std::string& file) {
+    return sound_buffers[file];
 }
 
 Registry& Game::getRegistry() {

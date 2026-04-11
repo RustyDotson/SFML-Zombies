@@ -29,11 +29,19 @@ public:
 
     void setRoundOver(bool value);
 
+    void playSound(sf::SoundBuffer buffer);
+
+    sf::SoundBuffer getSoundBuffer(const std::string& file);
+
     Registry& getRegistry();
 
 private:
     float dt = 0.f;
     bool round_over = true;
+    std::unordered_map<std::string, sf::SoundBuffer> sound_buffers = {
+        {"shoot", sf::SoundBuffer("media/sounds/pistol_shot.ogg")}
+    };
+    sf::Sound game_sound = sf::Sound(sound_buffers["shoot"]);
 
     Registry registry;
 

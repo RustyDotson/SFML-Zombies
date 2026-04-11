@@ -370,7 +370,7 @@ void SpawnSystem::createCursor(Registry& reg) {
 }
 
 
-void SpawnSystem::createBullet(Registry& reg, sf::Angle angle, float vx, float vy, sf::Vector2f position) {
+void SpawnSystem::createBullet(Game& game, Registry& reg, sf::Angle angle, float vx, float vy, sf::Vector2f position) {
         Entity bullet = reg.create();
         
         reg.getComponent<Sprite>()[bullet] = Sprite{};
@@ -387,6 +387,8 @@ void SpawnSystem::createBullet(Registry& reg, sf::Angle angle, float vx, float v
         reg.getComponent<CollisionBox>()[bullet].collision_shape.setFillColor(sf::Color::Transparent);
         reg.getComponent<CollisionBox>()[bullet].collision_shape.setOutlineColor(sf::Color::Blue);
         reg.getComponent<CollisionBox>()[bullet].collision_shape.setOutlineThickness(2.f);
+
+        game.playSound(game.getSoundBuffer("shoot"));
 }
 
 
@@ -446,5 +448,17 @@ void RoundSystem::newRound(Registry& reg, sf::RenderWindow& window, Game& game, 
         game.setRoundOver(true);
         maxAsteroids = (maxAsteroids * 2) + 1; // Increase the number of asteroids for the next round
     }
+
+}
+
+
+////////////////////////////////////////////////////////////////////////////////////
+//ROUND SYSTEMS
+////////////////////////////////////////////////////////////////////////////////////
+
+void SoundSystem::playSound(const std::string& soundFile) {
+    // This function can be implemented to play a sound effect using SFML's audio module.
+    // For example, you could load a sound buffer and play it when certain events occur (e.g., shooting, asteroid destruction).
+
 
 }
