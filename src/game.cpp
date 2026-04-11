@@ -7,6 +7,10 @@
 #include "game.hpp"
 #include <iostream>
 
+/*Game::Game() {
+    soundManager.loadSound("shoot", "media/sounds/pistol_shot.ogg");
+    soundManager.loadSound("asteroid_explode", "media/sounds/asteroid_explosion.ogg");
+}*/
  
 void Game::update(sf::RenderWindow& window) {
     static uint32_t asteroids_this_round = 0;
@@ -74,14 +78,12 @@ void Game::setRoundOver(bool value) {
     round_over = value;
 }
 
-void Game::playSound(sf::SoundBuffer buffer) {
-    //sound.setBuffer(buffer);
-    //game_sound.setBuffer(buffer);
-    game_sound.play();
+void Game::playSound(const std::string& soundFile) {
+    soundManager.playSound(soundFile);
 }
 
 sf::SoundBuffer Game::getSoundBuffer(const std::string& file) {
-    return sound_buffers[file];
+    return soundManager.sound_buffers.at(file);
 }
 
 Registry& Game::getRegistry() {

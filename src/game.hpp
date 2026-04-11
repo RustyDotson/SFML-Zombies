@@ -3,10 +3,15 @@
 #include "ecs_simple/Systems.hpp"
 #include <SFML/Graphics.hpp>
 #include <SFML/Audio.hpp>
+#include <unordered_map>
+#include <string>
+#include "ecs_simple/SoundManager.hpp"
 
 class Game {
 public:
     
+    //Game();
+
     void update(sf::RenderWindow& window);
 
     void render(sf::RenderWindow& window);
@@ -29,7 +34,7 @@ public:
 
     void setRoundOver(bool value);
 
-    void playSound(sf::SoundBuffer buffer);
+    void playSound(const std::string& soundFile);
 
     sf::SoundBuffer getSoundBuffer(const std::string& file);
 
@@ -38,10 +43,6 @@ public:
 private:
     float dt = 0.f;
     bool round_over = true;
-    std::unordered_map<std::string, sf::SoundBuffer> sound_buffers = {
-        {"shoot", sf::SoundBuffer("media/sounds/pistol_shot.ogg")}
-    };
-    sf::Sound game_sound = sf::Sound(sound_buffers["shoot"]);
 
     Registry registry;
 
@@ -55,4 +56,6 @@ private:
     SpawnSystem spawnSystem;
     RoundSystem roundSystem;
 
+    SoundManager soundManager;
+    //SoundSystem soundSystem;
 };

@@ -51,10 +51,6 @@ struct SpawnSystem {
     void asteroidSplit(Registry& reg, Entity asteroid);
 };
 
-struct SoundSystem {
-    void playSound(const std::string& soundFile);
-};
-
 struct RoundSystem {
     void newRound(Registry& reg, sf::RenderWindow& window, Game& game, uint32_t& maxAsteroids);
 };
