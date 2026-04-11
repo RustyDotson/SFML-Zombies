@@ -5,7 +5,7 @@
 #include <SFML/Audio.hpp>
 #include <unordered_map>
 #include <string>
-#include "ecs_simple/SoundManager.hpp"
+#include "ecs_simple/Managers.hpp"
 
 class Game {
 public:

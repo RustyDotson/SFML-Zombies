@@ -54,3 +54,7 @@ struct SpawnSystem {
 struct RoundSystem {
     void newRound(Registry& reg, sf::RenderWindow& window, Game& game, uint32_t& maxAsteroids);
 };
+
+struct UISystem {
+    
+};
