@@ -117,6 +117,8 @@ void CollisionSystem::update_bulletcollisions(Registry& reg, Game& game) {
                     game.asteroidSplit(asteroid);
                     game.randomSoundPitch("asteroid_explode");
                     game.playSound("asteroid_explode");
+
+                    game.updateStat("score", "score: ", 1);
                 }
                 
                 
@@ -453,9 +455,4 @@ void RoundSystem::newRound(Registry& reg, sf::RenderWindow& window, Game& game, 
     }
 
 }
-
-
-////////////////////////////////////////////////////////////////////////////////////
-//UI SYSTEMS
-////////////////////////////////////////////////////////////////////////////////////
 

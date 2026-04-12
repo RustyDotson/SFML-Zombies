@@ -31,6 +31,7 @@ void Game::update(sf::RenderWindow& window) {
     transformSystem.update(registry, dt);
     transformSystem.asteroidScreenWrap(registry, window.getSize());
     transformSystem.asteroidRotation(registry, dt);
+
     spriteSystem.update(registry);
 }
 
@@ -38,6 +39,7 @@ void Game::render(sf::RenderWindow& window) {
     window.clear();
     spriteSystem.render(registry, window);
     //collisionSystem.render(registry, window);
+    uiManager.renderTexts(window);
     window.display();
 }
 
@@ -92,4 +94,10 @@ sf::SoundBuffer Game::getSoundBuffer(const std::string& file) {
 
 Registry& Game::getRegistry() {
     return registry;
+}
+
+void Game::updateStat(const std::string stat_name, std::string message, int amount) {
+    statsManager.updateStat(stat_name, 1);
+    int current_stat = statsManager.getStat(stat_name);
+    uiManager.updateTextString(stat_name, message + std::to_string(current_stat));
 }

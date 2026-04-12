@@ -2,6 +2,9 @@
 #pragma once
 
 class Game;
+struct SoundManager;
+struct StatsManager;
+struct UIManager;
 
 struct SpriteSystem{
     void update(Registry& reg);
@@ -56,5 +59,6 @@ struct RoundSystem {
 };
 
 struct UISystem {
-    
+    void update(Registry& reg, sf::RenderWindow& window, Game& game);
+    void render(Registry& reg, sf::RenderWindow& window, Game& game);
 };

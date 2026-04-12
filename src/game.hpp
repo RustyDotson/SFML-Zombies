@@ -40,6 +40,8 @@ public:
 
     sf::SoundBuffer getSoundBuffer(const std::string& file);
 
+    void updateStat(const std::string stat_name, std::string message, int amount);
+
     Registry& getRegistry();
 
 private:
@@ -59,5 +61,7 @@ private:
     RoundSystem roundSystem;
 
     SoundManager soundManager;
+    StatsManager statsManager;
+    UIManager uiManager;
     //SoundSystem soundSystem;
 };
