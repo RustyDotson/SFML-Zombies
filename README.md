@@ -31,3 +31,4 @@ As I continue to build this project, I would like to add the following:
 - asteroids drop abilities/temporary power ups
 - places within the game where the player can buy character or weapon upgrades using the points obtained.
 - z axis to add prioritization to sprite rendering order.
+- add barrier to the outside of the view so the player cannot leave the screen.
