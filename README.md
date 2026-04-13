@@ -1,5 +1,5 @@
 # SFML Asteroids
-# Asteroids build in SFML Graphics and C++
+### Asteroids build in SFML Graphics and C++
 
 ### What is this?
 This Asteroids project was built utilizing a custom engine with an [Entity Component System](https://en.wikipedia.org/wiki/Entity_component_system), a popular architectural pattern for large-scale video games. Unity now uses an ECS in their own game engine, allowing thousands of entities to exist at once without causing a lot of lag. Building a personal project through a custom ECS is a great way to understand how a lot of modern game engines work behind the scenes.
