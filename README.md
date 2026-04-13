@@ -30,3 +30,4 @@ As I continue to build this project, I would like to add the following:
 - Player starts with a really crappy weapon, able to purchase stronger weapons that have more range, bullet speed, bullet damage, and fire rate.
 - asteroids drop abilities/temporary power ups
 - places within the game where the player can buy character or weapon upgrades using the points obtained.
+- z axis to add prioritization to sprite rendering order.
