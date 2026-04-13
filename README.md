@@ -1,2 +1,15 @@
 # SFML Asteroids
 Asteroids build in SFML Graphics and C++
+
+This project was built utilizing a custom engine with an [Entity Component System](https://en.wikipedia.org/wiki/Entity_component_system), a popular architectural pattern for large-scale video games. Unity now uses an ECS in their own game engine, allowing thousands of entities to exist at once without causing a lot of lag.
+
+While Asteroids isn't necessarily a large scale game, it is possible to create a type of asteroids where thousands of collidable entities do all appear at once, which is what this version has. Each round, the number of asteroids increases by n*2+1 (subject to change), quickly increasing the number of asteroids that spawn.
+
+In order to play the game, build by using cmake in the root directory of the project. If you don't
+have cmake, please install it at https://cmake.org/download/ OR if you use Visual Studio Code, it would be easier to just install the cmake package located on the extensions page. installing cmake via the downloads on the website may require some configuration beforehand.
+
+After you have cmake setup, use the command `cmake --build build` in the root directory. The output program (depending on the OS) should be located somewhere like: build>bin>main.
+
+You shouldn't need to download any other dependencies, as cmake should install everything for SFML on its own.
+
+*NOTICE* On my macbook, the game is able to start very quickly, but my Windows machine requires around 10 seconds to load. This could just be an old Windows computer being an old Windows computer, or a problem somewhere in the code when initializing for windows systems. I'm currently looking into the issue. 
