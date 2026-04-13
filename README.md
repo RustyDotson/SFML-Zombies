@@ -16,3 +16,14 @@ You shouldn't need to download any other dependencies, as cmake should install e
 
 ### *NOTICE* 
 On my macbook, the game is able to start very quickly, but my Windows machine requires around 10 seconds to load. This could just be an old Windows computer being an old Windows computer, or a problem somewhere in the code when initializing for windows systems. I'm currently looking into the issue. 
+
+### Future Updates (notes for myself)
+As I continue to build this project, I would like to add the following:
+- add health to asteroids, and asteroid health increases each round.
+- increase asteroid speed each round.
+- explosions.
+- points system where player receives points for destroying asteroids, maybe add bonus points for every time a player shoots without missing a target.
+- create weapon entities, so that each weapon that a player has contains different traits.
+- Player starts with a really crappy weapon, able to purchase stronger weapons that have more range, bullet speed, bullet damage, and fire rate.
+- asteroids drop abilities/temporary power ups
+- places within the game where the player can buy character or weapon upgrades using the points obtained.
