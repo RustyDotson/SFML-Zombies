@@ -21,7 +21,6 @@ struct CollisionSystem{
 
 struct TransformSystem {
     void update(Registry& reg, float dt);
-    void asteroidScreenWrap(Registry& reg, sf::Vector2u window_size);
     void asteroidRotation(Registry& reg, float dt);
     void ScreenWrap(Registry& reg, sf::Vector2u window_size);
 };
