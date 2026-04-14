@@ -8,8 +8,14 @@
 //STATS MANAGER
 ////////////////////////////////////////////////////////////////////////////////////
 struct StatsManager {
+    int score = 0;
+    int asteroids_this_round = 0;
+    int asteroids_remaining = 0;
+
     std::unordered_map<std::string, int> stats = {
-        {"score", 0} 
+        {"score", 0},
+        {"asteroids_this_round", 0},
+        {"asteroids_remaining", 0}
     };
 
     void updateStat(const std::string& name, int value);

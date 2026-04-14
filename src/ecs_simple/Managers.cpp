@@ -7,6 +7,7 @@
 ////////////////////////////////////////////////////////////////////////////////////
 //STATS MANAGER
 ////////////////////////////////////////////////////////////////////////////////////
+
 void StatsManager::updateStat(const std::string& name, int value) {
     stats[name] += value;
 }
@@ -67,7 +68,7 @@ void UIManager::updateTextString(const std::string& name, const std::string& new
         text->second.setString(newString);
     }
     else {
-        std::cout << "unable to load sound: " << name << std::endl;
+        std::cout << "unable to find stat: " << name << std::endl;
     }
 }
 

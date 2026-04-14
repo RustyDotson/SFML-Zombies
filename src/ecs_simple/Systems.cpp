@@ -128,7 +128,7 @@ void CollisionSystem::update_bulletcollisions(Registry& reg, Game& game) {
 
     for (Entity e : entities_to_kill) {
         std::cout << "killing entity " << e << std::endl;
-        reg.destroy(e);
+        game.destroy(e);
     }
 }
 
@@ -422,30 +422,27 @@ void SpawnSystem::asteroidSplit(Registry& reg, Entity asteroid) {
 //ROUND SYSTEMS
 ////////////////////////////////////////////////////////////////////////////////////
 
-void RoundSystem::newRound(Registry& reg, sf::RenderWindow& window, Game& game, uint32_t& maxAsteroids) {
+void RoundSystem::newRound(Registry& reg, sf::RenderWindow& window, Game& game, int& maxAsteroids) {
     std::unordered_map<Entity, AsteroidTag>& asteroids = reg.getComponent<AsteroidTag>();
 
     if (game.isRoundOver()) {
 
         sf::Vector2u window_size = window.getSize();
         sf::Vector2f spawn_coords = utils::randBordSpawnCoord(window_size, 64.f);
-        sf::Vector2f direction_to_center = sf::Vector2f(window_size.x/2, window_size.y/2) - spawn_coords;
-        float angle_to_center = atan2(direction_to_center.y, direction_to_center.x);
-        float angle_degrees = angle_to_center * 180 / 3.14159f; // Convert to degrees
-        float random_offset = utils::randFloat(-30.f, 30.f); // Random offset in degrees
 
         float speed = 100.f;
-        float vx = cos(angle_to_center) * speed;
-        float vy = sin(angle_to_center) * speed;
-        while (asteroids.size() < maxAsteroids) {
+        float vx = cos(utils::randFloat(0.f, 360.f)) * speed;
+        float vy = sin(utils::randFloat(0.f, 360.f)) * speed;
+        if (asteroids.size() < maxAsteroids) {
             
             spawn_coords = utils::randBordSpawnCoord(window_size, 64.f);
             utils::AsteroidSpawnParams spawnParams = utils::calculateAsteroidSpawnParams(spawn_coords, window_size, speed);
 
             game.createAsteroid(0, spawnParams.vx, spawnParams.vy, spawn_coords);
         }
-        game.setRoundOver(false);
-
+        if (asteroids.size() >= maxAsteroids){
+            game.setRoundOver(false);
+        }
     }
 
     if (asteroids.empty()) {

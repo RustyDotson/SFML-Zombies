@@ -13,7 +13,7 @@
 }*/
  
 void Game::update(sf::RenderWindow& window) {
-    static uint32_t asteroids_this_round = 0;
+    static int asteroids_this_round = 0;
 
     inputSystem.update(registry, window);
     movementSystem.update_player(registry, dt);
@@ -22,7 +22,7 @@ void Game::update(sf::RenderWindow& window) {
     shootingSystem.update(registry, *this, dt);
     
     //spawnSystem.newRound(registry, window, *this, asteroids_this_round);
-    roundSystem.newRound(registry, window, *this, asteroids_this_round);
+    roundSystem.newRound(registry, window, *this, statsManager.asteroids_this_round);
     collisionSystem.update_hitbox(registry);
     collisionSystem.update_bulletcollisions(registry, *this);
     collisionSystem.update_playercollisions(registry, *this);

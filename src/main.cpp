@@ -17,10 +17,12 @@ int main(){
     sf::Vector2u windowSize = {static_cast<unsigned int>(desktop.size.x * 0.9), static_cast<unsigned int>(desktop.size.y * 0.9)};
     sf::RenderWindow window(sf::VideoMode(windowSize), "Asteroids!", sf::Style::Default, sf::State::Windowed, settings);
 
-    Game game;
-    game.createPlayer();
-    game.createCursor();
+    bool game_end = false;
 
+
+    Game game;
+    game.createCursor();
+    game.createPlayer();
 
     sf::Clock clock;
 
@@ -40,7 +42,6 @@ int main(){
 
         
     }
-
     
     return 0;
 }
