@@ -29,7 +29,7 @@ void Game::update(sf::RenderWindow& window) {
     
     
     transformSystem.update(registry, dt);
-    transformSystem.asteroidScreenWrap(registry, window.getSize());
+    transformSystem.ScreenWrap(registry, window.getSize());
     transformSystem.asteroidRotation(registry, dt);
 
     spriteSystem.update(registry);

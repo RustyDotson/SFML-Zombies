@@ -50,7 +50,7 @@ struct CursorTag {
 };
 
 struct BulletTag {
-    float lifetime = 3.f;
+    float lifetime = 0.3f;
     float timeAlive = 0.f;
 };
 

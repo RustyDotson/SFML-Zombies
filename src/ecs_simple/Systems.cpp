@@ -194,6 +194,27 @@ void TransformSystem::asteroidScreenWrap(Registry& reg, sf::Vector2u window_size
     }
 }
 
+void TransformSystem::ScreenWrap(Registry& reg, sf::Vector2u window_size) {
+    std::unordered_map<Entity, Transform>& transforms = reg.getComponent<Transform>();
+    std::unordered_map<Entity, AsteroidTag>& asteroidTags = reg.getComponent<AsteroidTag>();
+
+    for (const auto& [transform, __] : transforms) {
+        if (transforms.contains(transform)) {
+            if (transforms[transform].position.x < 0 - transforms[transform].size_x) {
+                transforms[transform].position.x = static_cast<float>(window_size.x) + transforms[transform].size_x;
+            } else if (transforms[transform].position.x > window_size.x + transforms[transform].size_x) {
+                transforms[transform].position.x = 0.f - transforms[transform].size_x;
+            }
+
+            if (transforms[transform].position.y < 0 - transforms[transform].size_y) {
+                transforms[transform].position.y = static_cast<float>(window_size.y) + transforms[transform].size_y;
+            } else if (transforms[transform].position.y > window_size.y + transforms[transform].size_y) {
+                transforms[transform].position.y = 0.f - transforms[transform].size_y;
+            }
+        }
+    }
+}
+
 
 ////////////////////////////////////////////////////////////////////////////////////
 //MOVEMENT SYSTEMS
