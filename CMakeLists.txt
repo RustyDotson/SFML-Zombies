@@ -26,4 +26,8 @@ add_executable(main src/main.cpp src/game.hpp src/game.cpp src/ecs_simple/Entity
 target_compile_features(main PRIVATE cxx_std_17)
 target_link_libraries(main PRIVATE SFML::Graphics SFML::Window SFML::Audio)
 
+add_executable(tests src/tests.cpp src/tests.hpp src/game.hpp src/game.cpp src/ecs_simple/Entity.hpp src/ecs_simple/Components.hpp src/ecs_simple/Registry.hpp src/ecs_simple/Registry.cpp src/ecs_simple/Systems.hpp src/ecs_simple/Systems.cpp src/ecs_simple/utils/helpers.hpp src/ecs_simple/utils/helpers.cpp src/ecs_simple/Managers.hpp src/ecs_simple/Managers.cpp)
+target_compile_features(tests PRIVATE cxx_std_17)
+target_link_libraries(tests PRIVATE SFML::Graphics SFML::Window SFML::Audio)
+
 set_property(DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR} PROPERTY VS_STARTUP_PROJECT main)
