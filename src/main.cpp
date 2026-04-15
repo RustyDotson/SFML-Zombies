@@ -18,7 +18,7 @@ int main(){
     sf::RenderWindow window(sf::VideoMode(windowSize), "Asteroids!", sf::Style::Default, sf::State::Windowed, settings);
 
     bool game_end = false;
-
+    float dt;
 
     Game game;
     game.createCursor();
@@ -33,13 +33,17 @@ int main(){
             if (event->is<sf::Event::Closed>())
                 window.close();
         }
+        if (game_end) {
+            game.reset();
+            game_end = false;
+        }
         
-        float dt = clock.restart().asSeconds();
+        dt = clock.restart().asSeconds();
         game.updateDeltaTime(dt);
 
         game.update(window);
         game.render(window);
-
+        game_end = game.isGameOver();
         
     }
     

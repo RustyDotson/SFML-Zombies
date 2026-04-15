@@ -24,6 +24,7 @@ struct StatsManager {
 
     void updateStat(const std::string& name, int value);
     int getStat(const std::string& name);
+    void reset();
 };
 
 
@@ -78,4 +79,5 @@ struct UIManager {
     void updateTextString(const std::string& name, const std::string& newString);
     //void updateTextPosition(const std::string& name, sf::Vector2f newPosition);
     void renderTexts(sf::RenderWindow& window);
+    void reset();
 };

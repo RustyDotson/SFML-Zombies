@@ -20,6 +20,14 @@ int StatsManager::getStat(const std::string& name) {
     return 0;
 }
 
+void StatsManager::reset() {
+    score = 0;
+    asteroids_spawned_this_round = 0;
+    max_asteroids_this_round = 1;
+    asteroids_remaining = 0;
+    round = 0;
+}
+
 
 
 ////////////////////////////////////////////////////////////////////////////////////
@@ -79,4 +87,11 @@ void UIManager::renderTexts(sf::RenderWindow& window) {
         //sf_text.setPosition({0, 100});
         window.draw(sf_text);
     }
+}
+
+void UIManager::reset() {
+    //texts["score"].setString("Score: 0");
+    texts.at("score").setString("Score: 0");
+    //texts["round"].setString("Round: 0");
+    texts.at("round").setString("Round: 0");
 }

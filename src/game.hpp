@@ -12,6 +12,8 @@ public:
     
     //Game();
 
+    ~Game() = default;
+
     void update(sf::RenderWindow& window);
 
     void render(sf::RenderWindow& window);
@@ -34,7 +36,13 @@ public:
 
     bool isRoundOver();
 
+    bool isGameOver();
+
+    void setGameOver(bool value);
+
     void setRoundOver(bool value);
+
+    void reset();
 
     void playSound(const std::string& soundFile);
 
@@ -53,6 +61,7 @@ public:
 private:
     float dt = 0.f;
     bool round_over = true;
+    bool game_over = false;
 
     Registry registry;
 

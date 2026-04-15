@@ -11,9 +11,8 @@
     soundManager.loadSound("shoot", "media/sounds/pistol_shot.ogg");
     soundManager.loadSound("asteroid_explode", "media/sounds/asteroid_explosion.ogg");
 }*/
- 
+
 void Game::update(sf::RenderWindow& window) {
-    static int asteroids_this_round = 0;
 
     inputSystem.update(registry, window);
     movementSystem.update_player(registry, dt);
@@ -80,8 +79,48 @@ bool Game::isRoundOver() {
     return round_over;
 }
 
+bool Game::isGameOver() {
+    return game_over;
+}
+
+void Game::setGameOver(bool value) {
+    game_over = value;
+}
+
 void Game::setRoundOver(bool value) {
     round_over = value;
+}
+
+void Game::reset() {
+    // Destroy all asteroids
+    auto& asteroids = registry.getComponent<AsteroidTag>();
+    std::vector<Entity> asteroid_list;
+    for (auto& [entity, tag] : asteroids) {
+        asteroid_list.push_back(entity);
+    }
+    for (Entity entity : asteroid_list) {
+        registry.destroy(entity);
+    }
+
+    // Destroy all bullets
+    auto& bullets = registry.getComponent<BulletTag>();
+    std::vector<Entity> bullet_list;
+    for (auto& [entity, tag] : bullets) {
+        bullet_list.push_back(entity);
+    }
+    for (Entity entity : bullet_list) {
+        registry.destroy(entity);
+    }
+
+    uiManager.reset();
+    statsManager.reset();
+
+    // Reset game state
+    game_over = false;
+    round_over = true;
+    
+    // Recreate the player
+    createPlayer();
 }
 
 void Game::playSound(const std::string& soundFile) {

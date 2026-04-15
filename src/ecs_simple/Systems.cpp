@@ -86,6 +86,7 @@ void CollisionSystem::update_playercollisions(Registry& reg, Game& game) {
 
     for (Entity e : kill_buffer){
         game.destroy(e);
+        game.setGameOver(true);
     }
 }
 
