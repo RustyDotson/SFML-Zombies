@@ -25,7 +25,7 @@ void StatsManager::reset() {
     asteroids_spawned_this_round = 0;
     max_asteroids_this_round = 1;
     asteroids_remaining = 0;
-    round = 0;
+    round = 1;
 }
 
 
@@ -93,5 +93,5 @@ void UIManager::reset() {
     //texts["score"].setString("Score: 0");
     texts.at("score").setString("Score: 0");
     //texts["round"].setString("Round: 0");
-    texts.at("round").setString("Round: 0");
+    texts.at("round").setString("Round: 1");
 }

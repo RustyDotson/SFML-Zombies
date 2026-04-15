@@ -12,7 +12,7 @@ struct StatsManager {
     int asteroids_spawned_this_round = 0;
     int max_asteroids_this_round = 1;
     int asteroids_remaining = 0;
-    int round = 0;
+    int round = 1;
 
     std::unordered_map<std::string, int*> stats = {
         {"score", &score},
@@ -58,7 +58,7 @@ struct UIManager {
 
     std::unordered_map<std::string, sf::Text> texts = {
         {"score", sf::Text(fonts["default"], "Score: 0", 48)},
-        {"round", sf::Text(fonts["default"], "Round: 0", 48)}
+        {"round", sf::Text(fonts["default"], "Round: 1", 48)}
     };
 
     int UI_text_offset;
