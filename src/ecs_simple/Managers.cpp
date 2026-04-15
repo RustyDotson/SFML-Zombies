@@ -52,15 +52,17 @@ void SoundManager::randomSoundPitch(const std::string& name) {
 ////////////////////////////////////////////////////////////////////////////////////
 //UI MANAGER
 ////////////////////////////////////////////////////////////////////////////////////
-/*UIManager::UIManager() {
-        // Load default font
-        sf::Font default_font;
-        if (!default_font.openFromFile("media/fonts/Samba.ttf")) {
-            std::cout << "Failed to load default font!" << std::endl;
-        } else {
-            fonts["default"] = default_font;
+UIManager::UIManager() {
+        UI_text_offset = 48;
+        int offset_counter = 0;
+        float new_y_coord = 0.f;
+        for (auto& [name, text] : texts) {
+            new_y_coord = UI_text_offset*offset_counter;
+            std::cout << "NEW TEXT COORD " << std::to_string(new_y_coord) << std::endl;
+            text.setPosition({0, new_y_coord});
+            offset_counter++;
         }
-}*/
+}
 
 void UIManager::updateTextString(const std::string& name, const std::string& newString) {
     auto text = texts.find(name);
@@ -73,7 +75,8 @@ void UIManager::updateTextString(const std::string& name, const std::string& new
 }
 
 void UIManager::renderTexts(sf::RenderWindow& window) {
-    for (const auto [text_name, sf_text] : texts) {
+    for (auto [text_name, sf_text] : texts) {
+        //sf_text.setPosition({0, 100});
         window.draw(sf_text);
     }
 }

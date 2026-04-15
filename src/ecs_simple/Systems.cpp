@@ -127,7 +127,7 @@ void CollisionSystem::update_bulletcollisions(Registry& reg, Game& game) {
                         case 2: current_score += 1; break; //asteroid size 2 is the mini asteroid
                     }
                     std::cout << current_score << std::endl;
-                    game.updateStat("score", "score: ", current_score);
+                    game.updateStat("score", "Score: ", current_score);
                 }
                 
                 
@@ -466,10 +466,13 @@ void RoundSystem::newRound(Registry& reg, sf::RenderWindow& window, Game& game, 
             }
         }
 
-        if (asteroids.empty()) {
+        else if (asteroids.empty()) {
             game.setRoundOver(true);
             new_round_timer = 0.f;
             maxAsteroids = (maxAsteroids * 2) + 1; // Increase the number of asteroids for the next round
+            int current_round = game.getStat("round");
+            game.updateStat("round", "Round: " + std::to_string(current_round+1), current_round + 1);
+
         }
     }
 
