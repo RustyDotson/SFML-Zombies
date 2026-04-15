@@ -118,7 +118,16 @@ void CollisionSystem::update_bulletcollisions(Registry& reg, Game& game) {
                     game.randomSoundPitch("asteroid_explode");
                     game.playSound("asteroid_explode");
 
-                    game.updateStat("score", "score: ", 1);
+                    int current_score = game.getStat("score");
+                    std::cout << current_score << std::endl;
+
+                    switch (asteroidTags[asteroid].size) {
+                        case 0: current_score += 3; break; //asteroid size 0 is the large asteroid
+                        case 1: current_score += 2; break; //asteroid size 1 is the med asteroid
+                        case 2: current_score += 1; break; //asteroid size 2 is the mini asteroid
+                    }
+                    std::cout << current_score << std::endl;
+                    game.updateStat("score", "score: ", current_score);
                 }
                 
                 

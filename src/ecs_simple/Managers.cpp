@@ -9,13 +9,13 @@
 ////////////////////////////////////////////////////////////////////////////////////
 
 void StatsManager::updateStat(const std::string& name, int value) {
-    stats[name] += value;
+    *(stats[name]) = value;
 }
 
 int StatsManager::getStat(const std::string& name) {
     auto stat = stats.find(name);
     if (stat != stats.end()) {
-        return stat->second;
+        return *(stat->second);
     }
     return 0;
 }

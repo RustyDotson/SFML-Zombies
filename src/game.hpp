@@ -42,6 +42,8 @@ public:
 
     void updateStat(const std::string stat_name, std::string message, int amount);
 
+    int getStat(const std::string stat_name);
+
     Registry& getRegistry();
 
 private:

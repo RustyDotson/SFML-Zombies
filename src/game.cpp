@@ -97,7 +97,11 @@ Registry& Game::getRegistry() {
 }
 
 void Game::updateStat(const std::string stat_name, std::string message, int amount) {
-    statsManager.updateStat(stat_name, 1);
+    statsManager.updateStat(stat_name, amount);
     int current_stat = statsManager.getStat(stat_name);
     uiManager.updateTextString(stat_name, message + std::to_string(current_stat));
+}
+
+int Game::getStat(const std::string stat_name){
+    return statsManager.getStat(stat_name);
 }

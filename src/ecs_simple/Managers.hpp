@@ -12,10 +12,10 @@ struct StatsManager {
     int asteroids_this_round = 0;
     int asteroids_remaining = 0;
 
-    std::unordered_map<std::string, int> stats = {
-        {"score", 0},
-        {"asteroids_this_round", 0},
-        {"asteroids_remaining", 0}
+    std::unordered_map<std::string, int*> stats = {
+        {"score", &score},
+        {"asteroids_this_round", &asteroids_this_round},
+        {"asteroids_remaining", &asteroids_remaining}
     };
 
     void updateStat(const std::string& name, int value);
