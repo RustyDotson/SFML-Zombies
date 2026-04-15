@@ -433,14 +433,20 @@ void SpawnSystem::asteroidSplit(Registry& reg, Entity asteroid) {
 
 void RoundSystem::newRound(Registry& reg, sf::RenderWindow& window, Game& game, int& maxAsteroids) {
     std::unordered_map<Entity, AsteroidTag>& asteroids = reg.getComponent<AsteroidTag>();
-    static float new_round_timer = 0.0f;
+
+    static float new_round_timer = 0.f;
     new_round_timer += game.getDeltaTime();
 
-    if (new_round_timer >= 5.f){
+    static float new_spawn_timer = 0.f;
+    new_spawn_timer += game.getDeltaTime();
+
+
+
+    if (new_round_timer >= 3.f){
         if (game.isRoundOver()) {
 
             
-            if (asteroids.size() < maxAsteroids) {
+            if (asteroids.size() < maxAsteroids && new_spawn_timer > 0.5f) {
                 sf::Vector2u window_size = window.getSize();
                 sf::Vector2f spawn_coords = utils::randBordSpawnCoord(window_size, 64.f);
 
@@ -452,6 +458,8 @@ void RoundSystem::newRound(Registry& reg, sf::RenderWindow& window, Game& game, 
                 utils::AsteroidSpawnParams spawnParams = utils::calculateAsteroidSpawnParams(spawn_coords, window_size, speed);
 
                 game.createAsteroid(0, spawnParams.vx, spawnParams.vy, spawn_coords);
+
+                new_spawn_timer = 0.f;
             }
             if (asteroids.size() >= maxAsteroids){
                 game.setRoundOver(false);
