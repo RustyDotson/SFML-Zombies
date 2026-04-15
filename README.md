@@ -1,6 +1,6 @@
 
 # SFML Asteroids
-### Asteroids build in SFML Graphics and C++
+### Asteroids built in SFML Graphics and C++
 
 ![asteroids_demo](https://github.com/user-attachments/assets/b83a136f-665d-4873-8352-0f746fb606b2)
 
