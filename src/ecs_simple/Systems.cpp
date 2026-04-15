@@ -442,12 +442,10 @@ void RoundSystem::newRound(Registry& reg, sf::RenderWindow& window, Game& game, 
     static float new_spawn_timer = 0.f;
     new_spawn_timer += game.getDeltaTime();
 
-
+    int asteroids_spawned = game.getStat("asteroids_spawned_this_round");
 
     if (new_round_timer >= 3.f){
         if (game.isRoundOver()) {
-
-            int asteroids_spawned = game.getStat("asteroids_spawned_this_round");
             if (asteroids_spawned <= maxAsteroids && new_spawn_timer > 0.5f) {
                 sf::Vector2u window_size = window.getSize();
                 sf::Vector2f spawn_coords = utils::randBordSpawnCoord(window_size, 64.f);
@@ -470,14 +468,14 @@ void RoundSystem::newRound(Registry& reg, sf::RenderWindow& window, Game& game, 
             }
         }
 
-        else if (asteroids.empty()) {
+        else if (asteroids_spawned >= maxAsteroids && asteroids.empty()) {
             game.setRoundOver(true);
             game.updateStat("asteroids_spawned_this_round", "", 0);
             //stats.asteroids_spawned_this_round = 0;
             new_round_timer = 0.f;
             maxAsteroids = (maxAsteroids * 2) + 1; // Increase the number of asteroids for the next round
             int current_round = game.getStat("round");
-            game.updateStat("round", "Round: " + std::to_string(current_round+1), current_round + 1);
+            game.updateStat("round", "Round: ", current_round + 1);
 
         }
     }
