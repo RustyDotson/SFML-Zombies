@@ -52,6 +52,10 @@ void Game::updateDeltaTime(float deltaTime) {
     dt = deltaTime;
 }
 
+float& Game::getDeltaTime(){
+    return dt;
+}
+
 void Game::createPlayer() {
     spawnSystem.createPlayer(registry);
 }

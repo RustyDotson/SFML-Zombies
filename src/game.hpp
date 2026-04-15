@@ -20,6 +20,8 @@ public:
 
     void updateDeltaTime(float deltaTime);
 
+    float& getDeltaTime();
+
     void createPlayer();
 
     void createCursor();

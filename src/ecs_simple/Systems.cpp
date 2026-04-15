@@ -433,30 +433,36 @@ void SpawnSystem::asteroidSplit(Registry& reg, Entity asteroid) {
 
 void RoundSystem::newRound(Registry& reg, sf::RenderWindow& window, Game& game, int& maxAsteroids) {
     std::unordered_map<Entity, AsteroidTag>& asteroids = reg.getComponent<AsteroidTag>();
+    static float new_round_timer = 0.0f;
+    new_round_timer += game.getDeltaTime();
 
-    if (game.isRoundOver()) {
+    if (new_round_timer >= 5.f){
+        if (game.isRoundOver()) {
 
-        sf::Vector2u window_size = window.getSize();
-        sf::Vector2f spawn_coords = utils::randBordSpawnCoord(window_size, 64.f);
-
-        float speed = 100.f;
-        float vx = cos(utils::randFloat(0.f, 360.f)) * speed;
-        float vy = sin(utils::randFloat(0.f, 360.f)) * speed;
-        if (asteroids.size() < maxAsteroids) {
             
-            spawn_coords = utils::randBordSpawnCoord(window_size, 64.f);
-            utils::AsteroidSpawnParams spawnParams = utils::calculateAsteroidSpawnParams(spawn_coords, window_size, speed);
+            if (asteroids.size() < maxAsteroids) {
+                sf::Vector2u window_size = window.getSize();
+                sf::Vector2f spawn_coords = utils::randBordSpawnCoord(window_size, 64.f);
 
-            game.createAsteroid(0, spawnParams.vx, spawnParams.vy, spawn_coords);
-        }
-        if (asteroids.size() >= maxAsteroids){
-            game.setRoundOver(false);
-        }
-    }
+                float speed = 100.f;
+                float vx = cos(utils::randFloat(0.f, 360.f)) * speed;
+                float vy = sin(utils::randFloat(0.f, 360.f)) * speed;
+                
+                spawn_coords = utils::randBordSpawnCoord(window_size, 64.f);
+                utils::AsteroidSpawnParams spawnParams = utils::calculateAsteroidSpawnParams(spawn_coords, window_size, speed);
 
-    if (asteroids.empty()) {
-        game.setRoundOver(true);
-        maxAsteroids = (maxAsteroids * 2) + 1; // Increase the number of asteroids for the next round
+                game.createAsteroid(0, spawnParams.vx, spawnParams.vy, spawn_coords);
+            }
+            if (asteroids.size() >= maxAsteroids){
+                game.setRoundOver(false);
+            }
+        }
+
+        if (asteroids.empty()) {
+            game.setRoundOver(true);
+            new_round_timer = 0.f;
+            maxAsteroids = (maxAsteroids * 2) + 1; // Increase the number of asteroids for the next round
+        }
     }
 
 }
