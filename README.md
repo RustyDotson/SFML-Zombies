@@ -29,10 +29,10 @@ As I continue to build this project, I would like to add the following:
 - add health to asteroids, and asteroid health increases each round.
 - increase asteroid speed each round.
 - explosions.
-- *mostly added* points system where player receives points for destroying asteroids, maybe add bonus points for every time a player shoots without missing a target.
+- points system where player receives points for destroying asteroids, maybe add bonus points for every time a player shoots without missing a target. (*mostly added*)
 - create weapon entities, so that each weapon that a player has contains different traits.
 - Player starts with a really crappy weapon, able to purchase stronger weapons that have more range, bullet speed, bullet damage, and fire rate.
 - asteroids drop abilities/temporary power ups
 - places within the game where the player can buy character or weapon upgrades using the points obtained.
 - z axis to add prioritization to sprite rendering order.
-- *added* add barrier to the outside of the view so the player cannot leave the screen.
+- add barrier to the outside of the view so the player cannot leave the screen. (*added with wrapping instead of a collision barrier*)
