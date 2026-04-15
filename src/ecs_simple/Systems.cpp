@@ -433,6 +433,7 @@ void SpawnSystem::asteroidSplit(Registry& reg, Entity asteroid) {
 
 void RoundSystem::newRound(Registry& reg, sf::RenderWindow& window, Game& game, int& maxAsteroids) {
     std::unordered_map<Entity, AsteroidTag>& asteroids = reg.getComponent<AsteroidTag>();
+    StatsManager stats = game.getStats();
 
     static float new_round_timer = 0.f;
     new_round_timer += game.getDeltaTime();
@@ -445,8 +446,8 @@ void RoundSystem::newRound(Registry& reg, sf::RenderWindow& window, Game& game, 
     if (new_round_timer >= 3.f){
         if (game.isRoundOver()) {
 
-            
-            if (asteroids.size() < maxAsteroids && new_spawn_timer > 0.5f) {
+            int asteroids_spawned = game.getStat("asteroids_spawned_this_round");
+            if (asteroids_spawned <= maxAsteroids && new_spawn_timer > 0.5f) {
                 sf::Vector2u window_size = window.getSize();
                 sf::Vector2f spawn_coords = utils::randBordSpawnCoord(window_size, 64.f);
 
@@ -458,16 +459,20 @@ void RoundSystem::newRound(Registry& reg, sf::RenderWindow& window, Game& game, 
                 utils::AsteroidSpawnParams spawnParams = utils::calculateAsteroidSpawnParams(spawn_coords, window_size, speed);
 
                 game.createAsteroid(0, spawnParams.vx, spawnParams.vy, spawn_coords);
+                //stats.asteroids_spawned_this_round += 1;
+                game.updateStat("asteroids_spawned_this_round", "", asteroids_spawned + 1);
 
                 new_spawn_timer = 0.f;
             }
-            if (asteroids.size() >= maxAsteroids){
+            if (asteroids_spawned >= maxAsteroids){
                 game.setRoundOver(false);
             }
         }
 
         else if (asteroids.empty()) {
             game.setRoundOver(true);
+            game.updateStat("asteroids_spawned_this_round", "", 0);
+            //stats.asteroids_spawned_this_round = 0;
             new_round_timer = 0.f;
             maxAsteroids = (maxAsteroids * 2) + 1; // Increase the number of asteroids for the next round
             int current_round = game.getStat("round");

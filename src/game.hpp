@@ -46,6 +46,8 @@ public:
 
     int getStat(const std::string stat_name);
 
+    StatsManager& getStats();
+
     Registry& getRegistry();
 
 private:

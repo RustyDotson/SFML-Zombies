@@ -9,13 +9,15 @@
 ////////////////////////////////////////////////////////////////////////////////////
 struct StatsManager {
     int score = 0;
-    int asteroids_this_round = 0;
+    int asteroids_spawned_this_round = 0;
+    int max_asteroids_this_round = 1;
     int asteroids_remaining = 0;
     int round = 0;
 
     std::unordered_map<std::string, int*> stats = {
         {"score", &score},
-        {"asteroids_this_round", &asteroids_this_round},
+        {"asteroids_spawned_this_round", &asteroids_spawned_this_round},
+        {"max_asteroids_this_round", &max_asteroids_this_round},
         {"asteroids_remaining", &asteroids_remaining},
         {"round", &round}
     };

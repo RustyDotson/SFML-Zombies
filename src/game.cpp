@@ -22,7 +22,7 @@ void Game::update(sf::RenderWindow& window) {
     shootingSystem.update(registry, *this, dt);
     
     //spawnSystem.newRound(registry, window, *this, asteroids_this_round);
-    roundSystem.newRound(registry, window, *this, statsManager.asteroids_this_round);
+    roundSystem.newRound(registry, window, *this, statsManager.max_asteroids_this_round);
     collisionSystem.update_hitbox(registry);
     collisionSystem.update_bulletcollisions(registry, *this);
     collisionSystem.update_playercollisions(registry, *this);
@@ -108,4 +108,8 @@ void Game::updateStat(const std::string stat_name, std::string message, int amou
 
 int Game::getStat(const std::string stat_name){
     return statsManager.getStat(stat_name);
+}
+
+StatsManager& Game::getStats() {
+    return statsManager;
 }
