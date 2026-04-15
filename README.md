@@ -2,6 +2,8 @@
 # SFML Asteroids
 ### Asteroids built in SFML Graphics and C++
 
+Please check the release of the game [here](https://github.com/RustyDotson/SFML-Asteroids/releases/tag/release) to easily try it out!
+
 ![asteroids_demo](https://github.com/user-attachments/assets/b83a136f-665d-4873-8352-0f746fb606b2)
 
 ### What is this?
