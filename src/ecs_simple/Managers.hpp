@@ -63,15 +63,6 @@ struct UIManager {
 
     int UI_text_offset;
 
-    /*UIManager() {
-        // Load default font
-        sf::Font default_font;
-        if (!default_font.loadFromFile("media/fonts/arial.ttf")) {
-            std::cout << "Failed to load default font!" << std::endl;
-        } else {
-            fonts["default"] = default_font;
-        }
-    }*/
 
     //void loadFont(const std::string& name, const std::string& filePath);
     //void createText(const std::string& name, const std::string& fontName, const std::string& string, unsigned int characterSize, sf::Color color);
