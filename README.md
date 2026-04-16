@@ -1,11 +1,13 @@
 
 # SFML Asteroids
-### Asteroids build in SFML Graphics and C++
+### Asteroids built in SFML Graphics and C++
+
+Please check the release of the game [here](https://github.com/RustyDotson/SFML-Asteroids/releases/tag/release) to easily try it out! It is only 2mb in size.
 
 ![asteroids_demo](https://github.com/user-attachments/assets/b83a136f-665d-4873-8352-0f746fb606b2)
 
 ### What is this?
-This Asteroids project was built utilizing a custom engine with an [Entity Component System](https://en.wikipedia.org/wiki/Entity_component_system), a popular architectural pattern for large-scale video games. Unity now uses an ECS in their own game engine, allowing thousands of entities to exist at once without causing a lot of lag. Building a personal project through a custom ECS is a great way to understand how a lot of modern game engines work behind the scenes.
+This Asteroids project was built utilizing a custom engine with an [Entity Component System](https://en.wikipedia.org/wiki/Entity_component_system), a popular architectural pattern for large-scale video games. Unity has been using an ECS in their own game engine for a while now, allowing thousands of entities to exist at once without causing a lot of lag. Building a personal project through a custom ECS is a great way to understand how a lot of modern game engines work behind the scenes.
 
 While Asteroids isn't necessarily a large scale game, it is possible to create a type of Asteroids where thousands of collidable entities do all appear at once, which is what this version has. Each round, the number of asteroids increases by n*2+1 (subject to change), quickly increasing the number of asteroids that spawn. 4 mini asteroids come from 1 large asteroid, so you could imagine the number of collidable entities that would be present within 10 rounds. However, it is nearly impossible to get to that high of a round until I implement player power ups.
 
@@ -27,10 +29,10 @@ As I continue to build this project, I would like to add the following:
 - add health to asteroids, and asteroid health increases each round.
 - increase asteroid speed each round.
 - explosions.
-- *mostly added* points system where player receives points for destroying asteroids, maybe add bonus points for every time a player shoots without missing a target.
+- points system where player receives points for destroying asteroids, maybe add bonus points for every time a player shoots without missing a target. (*mostly added*)
 - create weapon entities, so that each weapon that a player has contains different traits.
 - Player starts with a really crappy weapon, able to purchase stronger weapons that have more range, bullet speed, bullet damage, and fire rate.
 - asteroids drop abilities/temporary power ups
 - places within the game where the player can buy character or weapon upgrades using the points obtained.
 - z axis to add prioritization to sprite rendering order.
-- *added* add barrier to the outside of the view so the player cannot leave the screen.
+- add barrier to the outside of the view so the player cannot leave the screen. (*added with wrapping instead of a collision barrier*)
