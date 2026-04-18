@@ -2,3 +2,4 @@
 /_deps
 /.vscode
 /dist
+/CMakeCache.txt

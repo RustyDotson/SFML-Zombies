@@ -49,6 +49,10 @@ struct CursorTag {
     sf::Vector2i position;
 };
 
+struct ZombieTag {
+    float speed = 150.f;
+};
+
 struct BulletTag {
     float lifetime = 0.3f;
     float timeAlive = 0.f;

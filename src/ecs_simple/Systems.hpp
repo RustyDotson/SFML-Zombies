@@ -47,6 +47,7 @@ struct InputSystem {
 
 struct SpawnSystem {
     void createPlayer(Registry& reg);
+    void createZombie(Registry& reg, sf::Vector2f position);
     void createAsteroid(Registry& reg, uint32_t size, float vx, float vy, sf::Vector2f position);
     void createCursor(Registry& reg);
     void createBullet(Game& game, Registry& reg, sf::Angle angle, float vx, float vy, sf::Vector2f position);

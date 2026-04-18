@@ -343,6 +343,26 @@ void SpawnSystem::createPlayer(Registry& reg) {
 }
 
 
+void SpawnSystem::createZombie(Registry& reg, sf::Vector2f position) {
+    Entity zombie = reg.create();
+
+    float random_movement_speed = utils::randFloat(50.f, 250.f); // Random rotation speed between -50 and 50 degrees per second
+    reg.getComponent<ZombieTag>()[zombie] = ZombieTag{random_movement_speed};
+    ZombieTag& tag = reg.getComponent<ZombieTag>()[zombie];
+
+    reg.getComponent<Transform>()[zombie] = Transform {
+        sf::degrees(0.0f), 
+        0.f, 
+        0.f, 
+        position, 
+        200.f, 
+        200.f, 
+        64.f, 
+        64.f
+    };
+}
+
+
 void SpawnSystem::createAsteroid(Registry& reg, uint32_t size, float vx, float vy, sf::Vector2f position) {
     
 

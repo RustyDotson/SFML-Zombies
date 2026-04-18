@@ -41,6 +41,9 @@ class Registry {
         template<>
         std::unordered_map<Entity, AsteroidTag>& getComponent<AsteroidTag>();
 
+        template<>
+        std::unordered_map<Entity, ZombieTag>& getComponent<ZombieTag>();
+
     private:
         std::vector <uint32_t> recycled_ids;
         uint32_t max_entity = 0;
@@ -52,4 +55,5 @@ class Registry {
         std::unordered_map<Entity, CursorTag> cursors;
         std::unordered_map<Entity, BulletTag> bullets;
         std::unordered_map<Entity, AsteroidTag> asteroids;
+        std::unordered_map<Entity, ZombieTag> zombies;
 };

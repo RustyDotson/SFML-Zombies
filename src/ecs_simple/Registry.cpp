@@ -26,6 +26,7 @@ void Registry::destroy(Entity entity) {
     cursors.erase(entity);
     bullets.erase(entity);
     asteroids.erase(entity);
+    zombies.erase(entity);
 }
 
 Entity Registry::maxEntity(){
@@ -70,4 +71,9 @@ std::unordered_map<Entity, BulletTag>& Registry::getComponent<BulletTag>() {
 template<>
 std::unordered_map<Entity, AsteroidTag>& Registry::getComponent<AsteroidTag>() {
     return asteroids;
+}
+
+template<>
+std::unordered_map<Entity, ZombieTag>& Registry::getComponent<ZombieTag>() {
+    return zombies;
 }
