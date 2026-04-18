@@ -22,6 +22,7 @@ struct CollisionSystem{
 struct TransformSystem {
     void update(Registry& reg, float dt);
     void asteroidRotation(Registry& reg, float dt);
+    void zombieChase(Registry& reg, float dt);
     void ScreenWrap(Registry& reg, sf::Vector2u window_size);
 };
 

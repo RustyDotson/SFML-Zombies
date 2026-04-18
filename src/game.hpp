@@ -30,6 +30,8 @@ public:
 
     void createAsteroid(uint32_t size, float vx, float vy, sf::Vector2f position);
 
+    void createZombie(sf::Vector2f position);
+
     void asteroidSplit(Entity asteroid);
 
     void createBullet(sf::Angle angle, float vx, float vy, sf::Vector2f position);

@@ -1,3 +1,5 @@
+#define _USE_MATH_DEFINES
+
 #include "Systems.hpp"
 #include "Registry.hpp"
 #include "Components.hpp"
@@ -8,6 +10,8 @@
 #include <vector>
 #include <random>
 #include "utils/helpers.hpp"
+
+
 
 ////////////////////////////////////////////////////////////////////////////////////
 //SPRITE SYSTEMS
@@ -93,40 +97,32 @@ void CollisionSystem::update_playercollisions(Registry& reg, Game& game) {
 void CollisionSystem::update_bulletcollisions(Registry& reg, Game& game) {
     std::unordered_map<Entity, CollisionBox>& collision_boxes = reg.getComponent<CollisionBox>();
     std::unordered_map<Entity, BulletTag>& bulletTags = reg.getComponent<BulletTag>();
-    std::unordered_map<Entity, AsteroidTag>& asteroidTags = reg.getComponent<AsteroidTag>();
+    std::unordered_map<Entity, ZombieTag>& zombieTags = reg.getComponent<ZombieTag>();
 
     std::vector<Entity> entities_to_kill;
 
     for (const auto& [bullet, _] : bulletTags) {
         //std::cout << "Checking bullet: " << bullet << std::endl;
         sf::CircleShape bullet_hitbox = collision_boxes[bullet].collision_shape;
-        for (const auto& [asteroid, _] : asteroidTags) {
-            //std::cout << "checking asteroid: " << asteroid << std::endl;
-            sf::CircleShape asteroid_hitbox = collision_boxes[asteroid].collision_shape;
+        for (const auto& [zombie, _] : zombieTags) {
+            //std::cout << "checking zombie: " << zombie << std::endl;
+            sf::CircleShape zombie_hitbox = collision_boxes[zombie].collision_shape;
             
-            if (utils::collisionCheck(asteroid_hitbox, bullet_hitbox)){
-                std::cout << "collision happening between bullet entity " << bullet << " and asteroid entity " << asteroid << std::endl;
+            if (utils::collisionCheck(zombie_hitbox, bullet_hitbox)){
+                std::cout << "collision happening between bullet entity " << bullet << " and zombie entity " << zombie << std::endl;
                 bool bullet_in_killqueue = false;
-                bool asteroid_in_killqueue = false;
+                bool zombie_in_killqueue = false;
 
                 if (std::find(entities_to_kill.begin(), entities_to_kill.end(), bullet) == entities_to_kill.end()){
                     entities_to_kill.push_back(bullet);
                 }
 
-                if (std::find(entities_to_kill.begin(), entities_to_kill.end(), asteroid) == entities_to_kill.end()){
-                    entities_to_kill.push_back(asteroid);
-                    game.asteroidSplit(asteroid);
+                if (std::find(entities_to_kill.begin(), entities_to_kill.end(), zombie) == entities_to_kill.end()){
+                    entities_to_kill.push_back(zombie);
                     game.randomSoundPitch("asteroid_explode");
                     game.playSound("asteroid_explode");
 
-                    int current_score = game.getStat("score");
-                    std::cout << current_score << std::endl;
-
-                    switch (asteroidTags[asteroid].size) {
-                        case 0: current_score += 3; break; //asteroid size 0 is the large asteroid
-                        case 1: current_score += 2; break; //asteroid size 1 is the med asteroid
-                        case 2: current_score += 1; break; //asteroid size 2 is the mini asteroid
-                    }
+                    int current_score = game.getStat("score") + 1;
                     std::cout << current_score << std::endl;
                     game.updateStat("score", "Score: ", current_score);
                 }
@@ -182,6 +178,27 @@ void TransformSystem::asteroidRotation(Registry& reg, float dt) {
     }
 }
 
+void TransformSystem::zombieChase(Registry& reg, float dt) {
+    std::unordered_map<Entity, Transform>& transforms = reg.getComponent<Transform>();
+    std::unordered_map<Entity, ZombieTag>& zombies = reg.getComponent<ZombieTag>();
+    std::unordered_map<Entity, PlayerTag>& players = reg.getComponent<PlayerTag>();
+
+    for (auto& [player, _] : players) {
+        for (auto& [zombie, __] : zombies) {
+            sf::Vector2f difference = transforms[player].position - transforms[zombie].position;
+
+            sf::Angle angle = sf::degrees(atan2(difference.y, difference.x) * 180 / M_PI);
+
+            transforms[zombie].rotation = angle;
+
+            transforms[zombie].velocity_x = (cos(angle.asRadians()) * zombies[zombie].speed);
+            transforms[zombie].velocity_y = (sin(angle.asRadians()) * zombies[zombie].speed);
+
+        }
+        
+    }
+}
+
 void TransformSystem::ScreenWrap(Registry& reg, sf::Vector2u window_size) {
     std::unordered_map<Entity, Transform>& transforms = reg.getComponent<Transform>();
     std::unordered_map<Entity, AsteroidTag>& asteroidTags = reg.getComponent<AsteroidTag>();
@@ -211,32 +228,32 @@ void TransformSystem::ScreenWrap(Registry& reg, sf::Vector2u window_size) {
 void MovementSystem::update_player(Registry& reg, float dt) {
         std::unordered_map<Entity, Input>& inputs = reg.getComponent<Input>();
         std::unordered_map<Entity, Transform>& transforms = reg.getComponent<Transform>();
+        std::unordered_map<Entity, PlayerTag>& players = reg.getComponent<PlayerTag>();
 
-        const float acceleration = 250.f; // Adjust this value for faster/slower acceleration
-        const float friction = 0.03f; // Adjust this value for more/less friction
+        float acceleration; // Adjust this value for faster/slower acceleration
+        float friction; // Adjust this value for more/less friction
 
-        for (int e = 1; e <= reg.maxEntity(); e++) {
-            if (inputs.contains(e) && transforms.contains(e)){
+        for (const auto& [player, player_comps] : players) {
+            acceleration = player_comps.acceleration;
+            friction = player_comps.friction;
+            if (inputs[player].up) {
+                    transforms[player].velocity_y -= acceleration * dt;
+                }
+            if (inputs[player].down) {
+                transforms[player].velocity_y += acceleration * dt;
+            }
+            if (inputs[player].left) {
+                transforms[player].velocity_x -= acceleration * dt;
+            }
+            if (inputs[player].right) {
+                transforms[player].velocity_x += acceleration * dt;
+            }
 
-                if (inputs[e].up) {
-                    transforms[e].velocity_y -= acceleration * dt;
-                }
-                if (inputs[e].down) {
-                    transforms[e].velocity_y += acceleration * dt;
-                }
-                if (inputs[e].left) {
-                    transforms[e].velocity_x -= acceleration * dt;
-                }
-                if (inputs[e].right) {
-                    transforms[e].velocity_x += acceleration * dt;
-                }
-
-                if (!inputs[e].up && !inputs[e].down) {
-                    transforms[e].velocity_y *= pow(friction, dt); // Friction
-                }
-                if (!inputs[e].left && !inputs[e].right) {
-                    transforms[e].velocity_x *= pow(friction, dt); // Friction
-                }
+            if (!inputs[player].up && !inputs[player].down) {
+                transforms[player].velocity_y *= pow(friction, dt); // Friction
+            }
+            if (!inputs[player].left && !inputs[player].right) {
+                transforms[player].velocity_x *= pow(friction, dt); // Friction
             }
         }
 }
@@ -360,6 +377,16 @@ void SpawnSystem::createZombie(Registry& reg, sf::Vector2f position) {
         64.f, 
         64.f
     };
+
+    sf::Texture zombie_texture = sf::Texture(tag.texture, false, sf::IntRect());
+    reg.getComponent<Sprite>()[zombie] = Sprite{.texture = zombie_texture};
+    reg.getComponent<Sprite>()[zombie].sprite.setScale({2.f, 2.f});
+
+    reg.getComponent<CollisionBox>()[zombie].collision_shape.setPosition(position);
+    reg.getComponent<CollisionBox>()[zombie].collision_shape.setRadius(64.f / 2.f); // Set radius to match the size of the zombie sprite
+    reg.getComponent<CollisionBox>()[zombie].collision_shape.setFillColor(sf::Color::Transparent);
+    reg.getComponent<CollisionBox>()[zombie].collision_shape.setOutlineColor(sf::Color::Green);
+    reg.getComponent<CollisionBox>()[zombie].collision_shape.setOutlineThickness(2.f);
 }
 
 
@@ -452,8 +479,8 @@ void SpawnSystem::asteroidSplit(Registry& reg, Entity asteroid) {
 //ROUND SYSTEMS
 ////////////////////////////////////////////////////////////////////////////////////
 
-void RoundSystem::newRound(Registry& reg, sf::RenderWindow& window, Game& game, int& maxAsteroids) {
-    std::unordered_map<Entity, AsteroidTag>& asteroids = reg.getComponent<AsteroidTag>();
+void RoundSystem::newRound(Registry& reg, sf::RenderWindow& window, Game& game, int& maxZombies) {
+    std::unordered_map<Entity, ZombieTag>& zombies = reg.getComponent<ZombieTag>();
     StatsManager stats = game.getStats();
 
     static float new_round_timer = 0.f;
@@ -462,11 +489,11 @@ void RoundSystem::newRound(Registry& reg, sf::RenderWindow& window, Game& game, 
     static float new_spawn_timer = 0.f;
     new_spawn_timer += game.getDeltaTime();
 
-    int asteroids_spawned = game.getStat("asteroids_spawned_this_round");
+    int zombies_spawned = game.getStat("zombies_spawned_this_round");
 
     if (new_round_timer >= 3.f){
         if (game.isRoundOver()) {
-            if (asteroids_spawned <= maxAsteroids && new_spawn_timer > 0.5f) {
+            if (zombies_spawned <= maxZombies && new_spawn_timer > 0.5f) {
                 sf::Vector2u window_size = window.getSize();
                 sf::Vector2f spawn_coords = utils::randBordSpawnCoord(window_size, 64.f);
 
@@ -475,25 +502,24 @@ void RoundSystem::newRound(Registry& reg, sf::RenderWindow& window, Game& game, 
                 float vy = sin(utils::randFloat(0.f, 360.f)) * speed;
                 
                 spawn_coords = utils::randBordSpawnCoord(window_size, 64.f);
-                utils::AsteroidSpawnParams spawnParams = utils::calculateAsteroidSpawnParams(spawn_coords, window_size, speed);
 
-                game.createAsteroid(0, spawnParams.vx, spawnParams.vy, spawn_coords);
-                //stats.asteroids_spawned_this_round += 1;
-                game.updateStat("asteroids_spawned_this_round", "", asteroids_spawned + 1);
+                game.createZombie(spawn_coords);
+                //stats.zombies_spawned_this_round += 1;
+                game.updateStat("zombies_spawned_this_round", "", zombies_spawned + 1);
 
                 new_spawn_timer = 0.f;
             }
-            if (asteroids_spawned >= maxAsteroids){
+            if (zombies_spawned >= maxZombies){
                 game.setRoundOver(false);
             }
         }
 
-        else if (asteroids_spawned >= maxAsteroids && asteroids.empty()) {
+        else if (zombies_spawned >= maxZombies && zombies.empty()) {
             game.setRoundOver(true);
-            game.updateStat("asteroids_spawned_this_round", "", 0);
-            //stats.asteroids_spawned_this_round = 0;
+            game.updateStat("zombies_spawned_this_round", "", 0);
+            //stats.zombies_spawned_this_round = 0;
             new_round_timer = 0.f;
-            maxAsteroids = (maxAsteroids * 2) + 1; // Increase the number of asteroids for the next round
+            maxZombies = (maxZombies * 2) + 1; // Increase the number of zombies for the next round
             int current_round = game.getStat("round");
             game.updateStat("round", "Round: ", current_round + 1);
 

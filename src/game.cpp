@@ -29,7 +29,8 @@ void Game::update(sf::RenderWindow& window) {
     
     transformSystem.update(registry, dt);
     transformSystem.ScreenWrap(registry, window.getSize());
-    transformSystem.asteroidRotation(registry, dt);
+    //transformSystem.asteroidRotation(registry, dt);
+    transformSystem.zombieChase(registry, dt);
 
     spriteSystem.update(registry);
 }
@@ -61,6 +62,10 @@ void Game::createPlayer() {
 
 void Game::createAsteroid(uint32_t size, float vx, float vy, sf::Vector2f position) {
     spawnSystem.createAsteroid(registry, size, vx, vy, position);
+}
+
+void Game::createZombie(sf::Vector2f position) {
+    spawnSystem.createZombie(registry, position);
 }
 
 void Game::asteroidSplit(Entity asteroid) {

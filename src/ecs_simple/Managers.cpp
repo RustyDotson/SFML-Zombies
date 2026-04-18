@@ -23,8 +23,11 @@ int StatsManager::getStat(const std::string& name) {
 void StatsManager::reset() {
     score = 0;
     asteroids_spawned_this_round = 0;
+    zombies_spawned_this_round = 0;
     max_asteroids_this_round = 1;
+    max_zombies_this_round = 1;
     asteroids_remaining = 0;
+    zombies_remaining = 0;
     round = 1;
 }
 

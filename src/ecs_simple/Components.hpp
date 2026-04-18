@@ -43,6 +43,8 @@ struct PlayerTag {
     float bulletSpeed = 3000.f;
     float timeSinceLastShot = 10.f;
     float speed = 200.f;
+    float acceleration = 250.f;
+    float friction = 0.01f;
 };
 
 struct CursorTag {
@@ -51,6 +53,7 @@ struct CursorTag {
 
 struct ZombieTag {
     float speed = 150.f;
+    std::string texture = "media/sprites/zombie.png";
 };
 
 struct BulletTag {
